@@ -23,12 +23,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Generate config.js from secrets
-        env:
-          BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+      - name: Generate config.js with proxy URL
         run: |
-          printf 'const TELEGRAM_CONFIG = {\n    BOT_TOKEN: "%s",\n    CHAT_ID: "%s"\n};\n' "$BOT_TOKEN" "$CHAT_ID" > config.js
+          printf 'const TELEGRAM_CONFIG = {\n    PROXY_URL: "https://script.google.com/macros/s/AKfycbzKlsJ727ovbJK66YWbA_UUql2kSfPg-LPQKWcaXHgGNxC_vUk5EhO7KKEkDePHhhd3BA/exec"\n};\n' > config.js
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
