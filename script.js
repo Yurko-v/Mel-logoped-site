@@ -161,7 +161,8 @@ document.addEventListener('DOMContentLoaded', () => {
             try {
                 const response = await fetch(PROXY_URL, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'text/plain' },
                     body: JSON.stringify({
                         name: nameField.value.trim(),
                         phone: phoneField.value.trim(),
@@ -169,11 +170,6 @@ document.addEventListener('DOMContentLoaded', () => {
                         message: messageField.value.trim()
                     })
                 });
-
-                if (!response.ok) throw new Error('Proxy error');
-
-                const result = await response.json();
-                if (!result.ok) throw new Error('Send error');
 
                 // Success
                 btn.textContent = '✓ Заявка отправлена!';
