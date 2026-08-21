@@ -118,13 +118,12 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // ── Form Validation & Submit via Telegram ──
+    // ── Form Validation & Submit via Google Apps Script Proxy ──
     const form = document.getElementById('contact-form');
 
-    // Секреты загружаются из config.js (не коммитится в Git)
-    const hasTelegramConfig = typeof TELEGRAM_CONFIG !== 'undefined' && TELEGRAM_CONFIG.BOT_TOKEN && TELEGRAM_CONFIG.CHAT_ID;
-    const TELEGRAM_BOT_TOKEN = hasTelegramConfig ? TELEGRAM_CONFIG.BOT_TOKEN : '';
-    const TELEGRAM_CHAT_ID = hasTelegramConfig ? TELEGRAM_CONFIG.CHAT_ID : '';
+    // URL прокси загружается из config.js
+    const hasProxyConfig = typeof TELEGRAM_CONFIG !== 'undefined' && TELEGRAM_CONFIG.PROXY_URL;
+    const PROXY_URL = hasProxyConfig ? TELEGRAM_CONFIG.PROXY_URL : '';
 
     if (form) {
         form.addEventListener('submit', async (e) => {
@@ -149,17 +148,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (!isValid) return;
 
-            // Compose Telegram message
-            const text = [
-                '📩 *Новая заявка с сайта*',
-                '',
-                `👤 *Имя:* ${nameField.value.trim()}`,
-                `📞 *Телефон:* ${phoneField.value.trim()}`,
-                ageField.value.trim() ? `👶 *Возраст ребёнка:* ${ageField.value.trim()}` : '',
-                messageField.value.trim() ? `💬 *Сообщение:* ${messageField.value.trim()}` : '',
-                '',
-                `🕐 ${new Date().toLocaleString('ru-RU')}`
-            ].filter(Boolean).join('\n');
+            if (!PROXY_URL) {
+                alert('Форма временно не работает. Позвоните нам!');
+                return;
+            }
 
             // Show loading state
             const originalText = btn.textContent;
@@ -167,20 +159,21 @@ document.addEventListener('DOMContentLoaded', () => {
             btn.disabled = true;
 
             try {
-                const response = await fetch(
-                    `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`,
-                    {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            chat_id: TELEGRAM_CHAT_ID,
-                            text: text,
-                            parse_mode: 'Markdown'
-                        })
-                    }
-                );
+                const response = await fetch(PROXY_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        name: nameField.value.trim(),
+                        phone: phoneField.value.trim(),
+                        age: ageField.value.trim(),
+                        message: messageField.value.trim()
+                    })
+                });
 
-                if (!response.ok) throw new Error('Telegram API error');
+                if (!response.ok) throw new Error('Proxy error');
+
+                const result = await response.json();
+                if (!result.ok) throw new Error('Send error');
 
                 // Success
                 btn.textContent = '✓ Заявка отправлена!';

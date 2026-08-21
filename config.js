@@ -1,5 +1,5 @@
-// ⚠️ Этот файл содержит секретные данные — НЕ загружайте его в Git!
+// Конфигурация отправки заявок
 const TELEGRAM_CONFIG = {
-    BOT_TOKEN: '8876542989:AAF1ZJVSEWU-cqtKvJv-lPcQzYHG_1lj_Ls',
-    CHAT_ID: '-1003907973159'
+    // URL Google Apps Script прокси
+    PROXY_URL: 'https://script.google.com/macros/s/AKfycbzKlsJ727ovbJK66YWbA_UUql2kSfPg-LPQKWcaXHgGNxC_vUk5EhO7KKEkDePHhhd3BA/exec'
 };
