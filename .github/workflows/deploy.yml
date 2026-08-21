@@ -25,7 +25,7 @@ jobs:
 
       - name: Generate config.js with proxy URL
         run: |
-          printf 'const TELEGRAM_CONFIG = {\n    PROXY_URL: "https://script.google.com/macros/s/AKfycbzKlsJ727ovbJK66YWbA_UUql2kSfPg-LPQKWcaXHgGNxC_vUk5EhO7KKEkDePHhhd3BA/exec"\n};\n' > config.js
+          printf 'const TELEGRAM_CONFIG = {\n    PROXY_URL: "https://script.google.com/macros/s/AKfycbyy7yyOfjsVpRs1xng5Zfu2VBiI8LRVOldHnBxmWbgI0seM7xVJQnhjOYraTs6SAHOiZg/exec"\n};\n' > config.js
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
