@@ -1,14 +1,16 @@
-"""Бэкенд сайта «Мел»: принимает заявки с формы и пересылает их в Telegram."""
+"""Бэкенд сайта «Мел»: раздаёт склеенный в один файл сайт и принимает заявки с формы."""
+import json
 import logging
 import os
 import re
+from pathlib import Path
 
 import requests
 from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
+from fastapi.responses import FileResponse, HTMLResponse, JSONResponse
 from pydantic import BaseModel, field_validator
 
 load_dotenv()
@@ -19,8 +21,11 @@ ALLOWED_ORIGIN = os.environ.get("ALLOWED_ORIGIN", "*")
 
 PHONE_RE = re.compile(r"\+?\d[\d\s\-()]{9,}\d")
 
+BACKEND_DIR = Path(__file__).resolve().parent
+SITE_DIR = BACKEND_DIR.parent
+
 logger = logging.getLogger("mel-backend")
-app = FastAPI(title="Мел — API заявок")
+app = FastAPI(title="Мел — сайт и API заявок")
 
 app.add_middleware(
     CORSMiddleware,
@@ -28,6 +33,48 @@ app.add_middleware(
     allow_methods=["POST", "GET"],
     allow_headers=["*"],
 )
+
+
+def build_index_html() -> str:
+    """Склеивает index.html, style.css и script.js в один HTML-файл.
+
+    Источники правды остаются в корне проекта (index.html/style.css/script.js) —
+    склейка происходит один раз при старте сервера, а не хранится отдельным файлом.
+    """
+    html = (SITE_DIR / "index.html").read_text(encoding="utf-8")
+    css = (SITE_DIR / "style.css").read_text(encoding="utf-8")
+    script_js = (SITE_DIR / "script.js").read_text(encoding="utf-8")
+
+    html = html.replace(
+        '<link rel="stylesheet" href="style.css" />',
+        f"<style>\n{css}\n</style>",
+    )
+    # Бэкенд и фронтенд теперь на одном origin — конфиг указывает на относительный путь.
+    inline_config = f"<script>const TELEGRAM_CONFIG = {json.dumps({'API_URL': '/api/contact'})};</script>"
+    html = html.replace('<script src="config.js"></script>', inline_config)
+    html = html.replace('<script src="script.js"></script>', f"<script>\n{script_js}\n</script>")
+
+    return html
+
+
+INDEX_HTML = build_index_html()
+
+# Явные маршруты для картинок/иконок вместо монтирования всей папки проекта —
+# чтобы наружу не утекли backend/.env и прочие файлы репозитория.
+STATIC_ASSETS = {
+    "/favicon.ico": SITE_DIR / "favicon.ico",
+    "/logo.svg": SITE_DIR / "logo.svg",
+    "/1.png": SITE_DIR / "1.png",
+    "/2.png": SITE_DIR / "2.png",
+}
+
+for route_path, file_path in STATIC_ASSETS.items():
+    app.get(route_path, include_in_schema=False)(lambda fp=file_path: FileResponse(fp))
+
+
+@app.get("/", response_class=HTMLResponse, include_in_schema=False)
+def index():
+    return INDEX_HTML
 
 
 class ContactRequest(BaseModel):

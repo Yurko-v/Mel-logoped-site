@@ -40,24 +40,7 @@
 
 ## 🚀 Запуск
 
-Статический сайт — просто откройте `index.html` в браузере.  
-Или запустите через любой локальный сервер, например:
-
-```bash
-# Python
-python -m http.server 8000
-
-# Node.js
-npx serve .
-```
-
----
-
-## ⚙️ Бэкенд и настройка Telegram-бота
-
-Заявки с формы принимает небольшой Python (FastAPI) бэкенд в [backend/](backend/), который пересылает их в Telegram. Статический сайт (GitHub Pages) сам Python не выполняет — бэкенд нужно запускать отдельно (локально или на любом хостинге вроде Render/Railway/PythonAnywhere/VPS).
-
-### Запуск бэкенда
+Сайт и бэкенд теперь — одно FastAPI-приложение: при старте сервер склеивает `index.html` + `style.css` + `script.js` в один HTML и сам его раздаёт, плюс обрабатывает `/api/contact`. Один процесс — весь сайт.
 
 ```bash
 cd backend
@@ -66,34 +49,26 @@ venv\Scripts\activate       # Windows
 # source venv/bin/activate  # macOS/Linux
 pip install -r requirements.txt
 copy .env.example .env      # Windows; на macOS/Linux: cp .env.example .env
+python app.py
 ```
 
-Заполните `backend/.env`:
+Открой **http://localhost:5000/** — увидишь сайт целиком. Правки в `index.html`/`style.css`/`script.js` подхватятся после перезапуска сервера (сборка происходит один раз при старте).
+
+> Открывать `index.html` напрямую двойным кликом больше не нужно для проверки — этот вариант всё ещё технически работает (тогда используется отдельный [config.js](config.js)), но для локальной разработки удобнее через `python app.py`.
+
+---
+
+## ⚙️ Настройка Telegram-бота
+
+Заявки с формы принимает [backend/app.py](backend/app.py) — валидирует и пересылает их в Telegram через Bot API.
+
+Заполните `backend/.env` (создаётся из `backend/.env.example`):
 
 1. Создайте бота через [@BotFather](https://t.me/BotFather) в Telegram, получите `TELEGRAM_BOT_TOKEN`
 2. Узнайте `TELEGRAM_CHAT_ID` (например, через [@userinfobot](https://t.me/userinfobot) или API `getUpdates`)
-3. `ALLOWED_ORIGIN` — домен сайта в проде (для локальной разработки можно оставить `*`)
+3. `ALLOWED_ORIGIN` — нужен, только если сайт и бэкенд разнесены по разным доменам; при единой раздаче через FastAPI можно оставить `*`
 
-Запустите сервер:
-
-```bash
-python app.py
-# или: uvicorn app:app --reload --port 5000
-```
-
-Бэкенд поднимется на `http://localhost:5000`, эндпоинт формы — `POST /api/contact`, автодокументация (Swagger UI) — `http://localhost:5000/docs`.
-
-### Подключение фронтенда к бэкенду
-
-В [config.js](config.js) укажите адрес бэкенда:
-
-```js
-const TELEGRAM_CONFIG = {
-    API_URL: 'http://localhost:5000/api/contact'  // или адрес прод-хостинга бэкенда
-};
-```
-
-Для деплоя на GitHub Pages URL прод-бэкенда задаётся через переменную репозитория **Settings → Secrets and variables → Actions → Variables → `BACKEND_API_URL`** — workflow [deploy.yml](.github/workflows/deploy.yml) подставит её в `config.js` при сборке.
+Автодокументация API (Swagger UI) — `http://localhost:5000/docs`.
 
 > ⚠️ Файл `backend/.env` добавлен в `.gitignore` и не попадает в репозиторий.
 
@@ -110,7 +85,8 @@ const TELEGRAM_CONFIG = {
 ├── favicon.ico           # Иконка вкладки
 ├── 1.png, 2.png          # Фотографии галереи
 ├── backend/              # Python (FastAPI) бэкенд для приёма заявок
-│   ├── app.py            # Сервер: POST /api/contact → Telegram
+│   ├── app.py            # Раздаёт сайт (склейка HTML+CSS+JS) + POST /api/contact → Telegram
+│   ├── passenger_wsgi.py # Точка входа для Passenger-хостингов (WSGI-обёртка над FastAPI)
 │   ├── requirements.txt  # Зависимости
 │   └── .env.example      # Шаблон секретов (токен бота, chat id)
 └── .gitignore            # Исключения из Git
@@ -124,7 +100,7 @@ const TELEGRAM_CONFIG = {
 - **CSS3** — CSS-переменные, Flexbox, Grid, медиа-запросы, анимации
 - **JavaScript** — ванильный JS, IntersectionObserver, Fetch API
 - **Шрифты** — [Inter](https://fonts.google.com/specimen/Inter), [Cormorant Garamond](https://fonts.google.com/specimen/Cormorant+Garamond), [Unbounded](https://fonts.google.com/specimen/Unbounded)
-- **Python / FastAPI** — бэкенд приёма заявок ([backend/app.py](backend/app.py))
+- **Python / FastAPI** — раздача сайта одним HTML-файлом + приём заявок ([backend/app.py](backend/app.py))
 - **Telegram Bot API** — отправка заявок
 
 ---
