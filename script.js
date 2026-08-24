@@ -118,12 +118,12 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // ── Form Validation & Submit via Google Apps Script Proxy ──
+    // ── Form Validation & Submit via Python-бэкенд ──
     const form = document.getElementById('contact-form');
 
-    // URL прокси загружается из config.js
-    const hasProxyConfig = typeof TELEGRAM_CONFIG !== 'undefined' && TELEGRAM_CONFIG.PROXY_URL;
-    const PROXY_URL = hasProxyConfig ? TELEGRAM_CONFIG.PROXY_URL : '';
+    // URL бэкенда загружается из config.js
+    const hasApiConfig = typeof TELEGRAM_CONFIG !== 'undefined' && TELEGRAM_CONFIG.API_URL;
+    const API_URL = hasApiConfig ? TELEGRAM_CONFIG.API_URL : '';
 
     if (form) {
         form.addEventListener('submit', async (e) => {
@@ -148,7 +148,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (!isValid) return;
 
-            if (!PROXY_URL) {
+            if (!API_URL) {
                 alert('Форма временно не работает. Позвоните нам!');
                 return;
             }
@@ -159,10 +159,9 @@ document.addEventListener('DOMContentLoaded', () => {
             btn.disabled = true;
 
             try {
-                const response = await fetch(PROXY_URL, {
+                const response = await fetch(API_URL, {
                     method: 'POST',
-                    mode: 'no-cors',
-                    headers: { 'Content-Type': 'text/plain' },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         name: nameField.value.trim(),
                         phone: phoneField.value.trim(),
@@ -170,6 +169,11 @@ document.addEventListener('DOMContentLoaded', () => {
                         message: messageField.value.trim()
                     })
                 });
+
+                const result = await response.json().catch(() => ({}));
+                if (!response.ok || !result.ok) {
+                    throw new Error(result.error || 'Ошибка отправки');
+                }
 
                 // Success
                 btn.textContent = '✓ Заявка отправлена!';

@@ -53,38 +53,67 @@ npx serve .
 
 ---
 
-## ⚙️ Настройка Telegram-бота
+## ⚙️ Бэкенд и настройка Telegram-бота
 
-Заявки с формы отправляются в Telegram. Для настройки:
+Заявки с формы принимает небольшой Python (FastAPI) бэкенд в [backend/](backend/), который пересылает их в Telegram. Статический сайт (GitHub Pages) сам Python не выполняет — бэкенд нужно запускать отдельно (локально или на любом хостинге вроде Render/Railway/PythonAnywhere/VPS).
 
-1. Создайте бота через [@BotFather](https://t.me/BotFather) в Telegram
-2. Получите токен бота и Chat ID группы/чата
-3. Скопируйте `config.example.js` → `config.js`
-4. Заполните своими данными:
+### Запуск бэкенда
+
+```bash
+cd backend
+python -m venv venv
+venv\Scripts\activate       # Windows
+# source venv/bin/activate  # macOS/Linux
+pip install -r requirements.txt
+copy .env.example .env      # Windows; на macOS/Linux: cp .env.example .env
+```
+
+Заполните `backend/.env`:
+
+1. Создайте бота через [@BotFather](https://t.me/BotFather) в Telegram, получите `TELEGRAM_BOT_TOKEN`
+2. Узнайте `TELEGRAM_CHAT_ID` (например, через [@userinfobot](https://t.me/userinfobot) или API `getUpdates`)
+3. `ALLOWED_ORIGIN` — домен сайта в проде (для локальной разработки можно оставить `*`)
+
+Запустите сервер:
+
+```bash
+python app.py
+# или: uvicorn app:app --reload --port 5000
+```
+
+Бэкенд поднимется на `http://localhost:5000`, эндпоинт формы — `POST /api/contact`, автодокументация (Swagger UI) — `http://localhost:5000/docs`.
+
+### Подключение фронтенда к бэкенду
+
+В [config.js](config.js) укажите адрес бэкенда:
 
 ```js
 const TELEGRAM_CONFIG = {
-    BOT_TOKEN: 'ваш_токен',
-    CHAT_ID: 'ваш_chat_id'
+    API_URL: 'http://localhost:5000/api/contact'  // или адрес прод-хостинга бэкенда
 };
 ```
 
-> ⚠️ Файл `config.js` добавлен в `.gitignore` и не попадает в репозиторий.
+Для деплоя на GitHub Pages URL прод-бэкенда задаётся через переменную репозитория **Settings → Secrets and variables → Actions → Variables → `BACKEND_API_URL`** — workflow [deploy.yml](.github/workflows/deploy.yml) подставит её в `config.js` при сборке.
+
+> ⚠️ Файл `backend/.env` добавлен в `.gitignore` и не попадает в репозиторий.
 
 ---
 
 ## 📁 Структура проекта
 
 ```
-├── index.html           # Основная страница
-├── style.css            # Стили (адаптив, анимации, компоненты)
-├── script.js            # Логика (меню, FAQ, форма, Telegram)
-├── config.js            # 🔒 Секреты Telegram (не в Git)
-├── config.example.js    # Шаблон конфигурации
-├── logo.svg             # Логотип
-├── favicon.ico          # Иконка вкладки
-├── 1.png, 2.png         # Фотографии галереи
-└── .gitignore           # Исключения из Git
+├── index.html            # Основная страница
+├── style.css             # Стили (адаптив, анимации, компоненты)
+├── script.js             # Логика (меню, FAQ, форма, запрос к бэкенду)
+├── config.js             # URL бэкенда (API_URL)
+├── logo.svg              # Логотип
+├── favicon.ico           # Иконка вкладки
+├── 1.png, 2.png          # Фотографии галереи
+├── backend/              # Python (FastAPI) бэкенд для приёма заявок
+│   ├── app.py            # Сервер: POST /api/contact → Telegram
+│   ├── requirements.txt  # Зависимости
+│   └── .env.example      # Шаблон секретов (токен бота, chat id)
+└── .gitignore            # Исключения из Git
 ```
 
 ---
@@ -95,6 +124,7 @@ const TELEGRAM_CONFIG = {
 - **CSS3** — CSS-переменные, Flexbox, Grid, медиа-запросы, анимации
 - **JavaScript** — ванильный JS, IntersectionObserver, Fetch API
 - **Шрифты** — [Inter](https://fonts.google.com/specimen/Inter), [Cormorant Garamond](https://fonts.google.com/specimen/Cormorant+Garamond), [Unbounded](https://fonts.google.com/specimen/Unbounded)
+- **Python / FastAPI** — бэкенд приёма заявок ([backend/app.py](backend/app.py))
 - **Telegram Bot API** — отправка заявок
 
 ---

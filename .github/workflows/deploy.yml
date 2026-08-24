@@ -23,9 +23,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Generate config.js with proxy URL
+      - name: Generate config.js with backend API URL
+        env:
+          API_URL: ${{ vars.BACKEND_API_URL }}
         run: |
-          printf 'const TELEGRAM_CONFIG = {\n    PROXY_URL: "https://script.google.com/macros/s/AKfycbyy7yyOfjsVpRs1xng5Zfu2VBiI8LRVOldHnBxmWbgI0seM7xVJQnhjOYraTs6SAHOiZg/exec"\n};\n' > config.js
+          printf 'const TELEGRAM_CONFIG = {\n    API_URL: "%s"\n};\n' "$API_URL" > config.js
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
