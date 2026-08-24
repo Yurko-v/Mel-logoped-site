@@ -1,0 +1,28 @@
+name: Deploy to Beget
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy over SSH
+        env:
+          SSH_KEY: ${{ secrets.BEGET_SSH_KEY }}
+          SSH_HOST: ${{ secrets.BEGET_HOST }}
+          SSH_USER: ${{ secrets.BEGET_USER }}
+        run: |
+          mkdir -p ~/.ssh
+          echo "$SSH_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -H "$SSH_HOST" >> ~/.ssh/known_hosts 2>/dev/null
+
+          ssh -i ~/.ssh/deploy_key "$SSH_USER@$SSH_HOST" '
+            set -e
+            cd ~/uravelik.beget.tech/mel-site
+            git fetch origin main
+            git reset --hard origin/main
+            touch ~/uravelik.beget.tech/tmp/restart.txt
+          '
