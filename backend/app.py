@@ -13,16 +13,16 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, HTMLResponse, JSONResponse
 from pydantic import BaseModel, field_validator
 
-load_dotenv()
+BACKEND_DIR = Path(__file__).resolve().parent
+SITE_DIR = BACKEND_DIR.parent
+
+load_dotenv(BACKEND_DIR / ".env")
 
 BOT_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN", "")
 CHAT_ID = os.environ.get("TELEGRAM_CHAT_ID", "")
 ALLOWED_ORIGIN = os.environ.get("ALLOWED_ORIGIN", "*")
 
 PHONE_RE = re.compile(r"\+?\d[\d\s\-()]{9,}\d")
-
-BACKEND_DIR = Path(__file__).resolve().parent
-SITE_DIR = BACKEND_DIR.parent
 
 logger = logging.getLogger("mel-backend")
 app = FastAPI(title="Мел — сайт и API заявок")
