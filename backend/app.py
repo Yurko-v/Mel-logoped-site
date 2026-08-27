@@ -45,14 +45,21 @@ def build_index_html() -> str:
     css = (SITE_DIR / "style.css").read_text(encoding="utf-8")
     script_js = (SITE_DIR / "script.js").read_text(encoding="utf-8")
 
-    html = html.replace(
-        '<link rel="stylesheet" href="style.css" />',
-        f"<style>\n{css}\n</style>",
+    # href/src сверяются с учётом ?v=... — иначе смена версии в index.html
+    # (кэш-бастинг при локальной разработке) молча ломает подстановку в проде.
+    html = re.sub(
+        r'<link rel="stylesheet" href="style\.css(?:\?[^"]*)?" />',
+        lambda _match: f"<style>\n{css}\n</style>",
+        html,
     )
     # Бэкенд и фронтенд теперь на одном origin — конфиг указывает на относительный путь.
     inline_config = f"<script>const TELEGRAM_CONFIG = {json.dumps({'API_URL': '/api/contact'})};</script>"
     html = html.replace('<script src="config.js"></script>', inline_config)
-    html = html.replace('<script src="script.js"></script>', f"<script>\n{script_js}\n</script>")
+    html = re.sub(
+        r'<script src="script\.js(?:\?[^"]*)?"></script>',
+        lambda _match: f"<script>\n{script_js}\n</script>",
+        html,
+    )
 
     return html
 
@@ -64,6 +71,7 @@ INDEX_HTML = build_index_html()
 STATIC_ASSETS = {
     "/favicon.ico": SITE_DIR / "favicon.ico",
     "/logo.svg": SITE_DIR / "logo.svg",
+    "/logo_footer.svg": SITE_DIR / "logo_footer.svg",
     "/1.png": SITE_DIR / "1.png",
     "/2.png": SITE_DIR / "2.png",
 }
