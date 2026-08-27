@@ -11,19 +11,27 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&family=Unbounded:wght@400;500;600;700&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&family=Unbounded:wght@400;500;600;700&display=swap"
         rel="stylesheet" />
 
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="style.css?v=18" />
 </head>
 
 <body>
+
+    <!-- Меловой SVG-фильтр (шероховатость мела) -->
+    <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+        <filter id="chalk" x="-20%" y="-20%" width="140%" height="140%">
+            <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" result="n" />
+            <feDisplacementMap in="SourceGraphic" in2="n" scale="2.2" xChannelSelector="R" yChannelSelector="G" />
+        </filter>
+    </svg>
 
     <!-- ═══════════════ HEADER ═══════════════ -->
     <header class="header" id="header">
         <div class="container header__inner">
             <a href="#" class="logo">
-                <img src="logo.svg" alt="Логотип Мел" class="logo__image">
+                <img src="logo_footer.svg" alt="Логотип Мел" class="logo__image">
             </a>
 
             <nav class="nav" id="nav">
@@ -46,36 +54,39 @@
     </header>
 
     <main>
-        <!-- ═══════════════ HERO ═══════════════ -->
+        <!-- ═══════════════ HERO — МЕЛОВАЯ ДОСКА ═══════════════ -->
         <section class="hero" id="hero">
-            <!-- Decorative elements -->
-            <div class="hero__decor hero__decor--leaf-1" aria-hidden="true">🌿</div>
-            <div class="hero__decor hero__decor--leaf-2" aria-hidden="true">🍃</div>
-            <div class="hero__decor hero__decor--flower-1" aria-hidden="true">🌸</div>
-            <div class="hero__decor hero__decor--flower-2" aria-hidden="true">🌼</div>
-
             <div class="container hero__inner">
                 <div class="hero__content">
-                    <p class="hero__subtitle animate-on-scroll">Детский центр развития</p>
+                    <p class="hero__subtitle animate-on-scroll">Детский центр развития · Кемерово</p>
                     <h1 class="hero__title animate-on-scroll">
                         <span class="hero__title-name">Мел</span>
+                        <svg class="hero__underline" viewBox="0 0 440 34" aria-hidden="true">
+                            <path d="M6 20 C 90 30, 150 8, 230 16 S 380 28, 434 14" />
+                        </svg>
                     </h1>
                     <p class="hero__slogan animate-on-scroll">Дорога в будущее</p>
                     <p class="hero__specialists animate-on-scroll">Нейропсихолог · Дефектолог · АВА-терапевт · Логопед
                     </p>
                     <div class="hero__actions animate-on-scroll">
                         <a href="#contact" class="btn btn--primary">Записаться на консультацию</a>
-                        <a href="#about" class="btn btn--outline">Узнать больше</a>
+                        <a href="#about" class="btn btn--chalk-outline"><span>Узнать больше</span></a>
                     </div>
                 </div>
-                <div class="hero__visual animate-on-scroll">
-                    <div class="hero__image-wrapper">
-                        <div class="hero__image-placeholder">
-                            <span class="hero__image-icon">👧🏻</span>
-                            <span class="hero__image-text">Каждый ребёнок —<br>маленькая вселенная</span>
-                        </div>
-                    </div>
+                <div class="hero__visual animate-on-scroll" aria-hidden="true">
+                    <svg class="hero__road" viewBox="0 0 460 300">
+                        <path class="hero__road-line" d="M24 280 C 130 258, 96 150, 210 138 S 372 138, 392 62" />
+                        <path class="hero__road-star"
+                            d="M398 22 l8 18 19 2 -13 13 3 19 -17 -9 -17 9 3 -19 -13 -13 19 -2 z" />
+                        <text class="hero__road-label" x="352" y="48" text-anchor="end">будущее</text>
+                    </svg>
                 </div>
+            </div>
+            <div class="hero__tray" aria-hidden="true">
+                <span class="hero__chalk hero__chalk--a"></span>
+                <span class="hero__chalk hero__chalk--b"></span>
+                <span class="hero__chalk hero__chalk--c"></span>
+                <span class="hero__eraser"></span>
             </div>
         </section>
 
@@ -292,7 +303,28 @@
 
                 <div class="reviews__grid">
                     <div class="review-card animate-on-scroll">
-                        <div class="review-card__stars">★★★★★</div>
+                        <div class="review-card__stars" role="img" aria-label="Оценка 5 из 5 звёзд">
+                            <svg viewBox="0 0 24 24" aria-hidden="true">
+                                <path
+                                    d="M12 .587l3.668 7.568 8.332 1.151-6.064 5.828 1.48 8.279L12 19.771l-7.416 3.642 1.48-8.279L0 9.306l8.332-1.151z" />
+                            </svg>
+                            <svg viewBox="0 0 24 24" aria-hidden="true">
+                                <path
+                                    d="M12 .587l3.668 7.568 8.332 1.151-6.064 5.828 1.48 8.279L12 19.771l-7.416 3.642 1.48-8.279L0 9.306l8.332-1.151z" />
+                            </svg>
+                            <svg viewBox="0 0 24 24" aria-hidden="true">
+                                <path
+                                    d="M12 .587l3.668 7.568 8.332 1.151-6.064 5.828 1.48 8.279L12 19.771l-7.416 3.642 1.48-8.279L0 9.306l8.332-1.151z" />
+                            </svg>
+                            <svg viewBox="0 0 24 24" aria-hidden="true">
+                                <path
+                                    d="M12 .587l3.668 7.568 8.332 1.151-6.064 5.828 1.48 8.279L12 19.771l-7.416 3.642 1.48-8.279L0 9.306l8.332-1.151z" />
+                            </svg>
+                            <svg viewBox="0 0 24 24" aria-hidden="true">
+                                <path
+                                    d="M12 .587l3.668 7.568 8.332 1.151-6.064 5.828 1.48 8.279L12 19.771l-7.416 3.642 1.48-8.279L0 9.306l8.332-1.151z" />
+                            </svg>
+                        </div>
                         <blockquote class="review-card__text">
                             «Пришли в центр с запуском речи в 3 года. Через 4 месяца занятий сын начал говорить фразами!
                             Огромная благодарность всей команде «Мел» за их профессионализм и терпение.»
@@ -307,7 +339,28 @@
                     </div>
 
                     <div class="review-card animate-on-scroll">
-                        <div class="review-card__stars">★★★★★</div>
+                        <div class="review-card__stars" role="img" aria-label="Оценка 5 из 5 звёзд">
+                            <svg viewBox="0 0 24 24" aria-hidden="true">
+                                <path
+                                    d="M12 .587l3.668 7.568 8.332 1.151-6.064 5.828 1.48 8.279L12 19.771l-7.416 3.642 1.48-8.279L0 9.306l8.332-1.151z" />
+                            </svg>
+                            <svg viewBox="0 0 24 24" aria-hidden="true">
+                                <path
+                                    d="M12 .587l3.668 7.568 8.332 1.151-6.064 5.828 1.48 8.279L12 19.771l-7.416 3.642 1.48-8.279L0 9.306l8.332-1.151z" />
+                            </svg>
+                            <svg viewBox="0 0 24 24" aria-hidden="true">
+                                <path
+                                    d="M12 .587l3.668 7.568 8.332 1.151-6.064 5.828 1.48 8.279L12 19.771l-7.416 3.642 1.48-8.279L0 9.306l8.332-1.151z" />
+                            </svg>
+                            <svg viewBox="0 0 24 24" aria-hidden="true">
+                                <path
+                                    d="M12 .587l3.668 7.568 8.332 1.151-6.064 5.828 1.48 8.279L12 19.771l-7.416 3.642 1.48-8.279L0 9.306l8.332-1.151z" />
+                            </svg>
+                            <svg viewBox="0 0 24 24" aria-hidden="true">
+                                <path
+                                    d="M12 .587l3.668 7.568 8.332 1.151-6.064 5.828 1.48 8.279L12 19.771l-7.416 3.642 1.48-8.279L0 9.306l8.332-1.151z" />
+                            </svg>
+                        </div>
                         <blockquote class="review-card__text">
                             «У дочки диагностировали СДВГ. Нейропсихолог центра составила программу коррекции — через
                             полгода учителя отмечают заметные улучшения в поведении и концентрации.»
@@ -322,7 +375,28 @@
                     </div>
 
                     <div class="review-card animate-on-scroll">
-                        <div class="review-card__stars">★★★★★</div>
+                        <div class="review-card__stars" role="img" aria-label="Оценка 5 из 5 звёзд">
+                            <svg viewBox="0 0 24 24" aria-hidden="true">
+                                <path
+                                    d="M12 .587l3.668 7.568 8.332 1.151-6.064 5.828 1.48 8.279L12 19.771l-7.416 3.642 1.48-8.279L0 9.306l8.332-1.151z" />
+                            </svg>
+                            <svg viewBox="0 0 24 24" aria-hidden="true">
+                                <path
+                                    d="M12 .587l3.668 7.568 8.332 1.151-6.064 5.828 1.48 8.279L12 19.771l-7.416 3.642 1.48-8.279L0 9.306l8.332-1.151z" />
+                            </svg>
+                            <svg viewBox="0 0 24 24" aria-hidden="true">
+                                <path
+                                    d="M12 .587l3.668 7.568 8.332 1.151-6.064 5.828 1.48 8.279L12 19.771l-7.416 3.642 1.48-8.279L0 9.306l8.332-1.151z" />
+                            </svg>
+                            <svg viewBox="0 0 24 24" aria-hidden="true">
+                                <path
+                                    d="M12 .587l3.668 7.568 8.332 1.151-6.064 5.828 1.48 8.279L12 19.771l-7.416 3.642 1.48-8.279L0 9.306l8.332-1.151z" />
+                            </svg>
+                            <svg viewBox="0 0 24 24" aria-hidden="true">
+                                <path
+                                    d="M12 .587l3.668 7.568 8.332 1.151-6.064 5.828 1.48 8.279L12 19.771l-7.416 3.642 1.48-8.279L0 9.306l8.332-1.151z" />
+                            </svg>
+                        </div>
                         <blockquote class="review-card__text">
                             «Ребёнок с РАС. АВА-терапевт центра — настоящий профессионал. Видим прогресс в коммуникации
                             и социальных навыках каждую неделю. Рекомендуем центр всем знакомым!»
@@ -347,12 +421,15 @@
                     <h2 class="section__title">Наши фотографии</h2>
                 </div>
                 <div class="gallery__slider animate-on-scroll">
-                    <button class="gallery__prev" aria-label="Previous">&#10094;</button>
-                    <div class="gallery__track">
-                        <div class="gallery__slide"><img src="1.png" alt="Фото 1" class="gallery__image"></div>
-                        <div class="gallery__slide"><img src="2.png" alt="Фото 2" class="gallery__image"></div>
+                    <div class="gallery__viewport">
+                        <div class="gallery__track">
+                            <div class="gallery__slide"><img src="1.png" alt="Фото 1" class="gallery__image"></div>
+                            <div class="gallery__slide"><img src="2.png" alt="Фото 2" class="gallery__image"></div>
+                        </div>
+                        <button class="gallery__prev" aria-label="Предыдущее фото">&#10094;</button>
+                        <button class="gallery__next" aria-label="Следующее фото">&#10095;</button>
                     </div>
-                    <button class="gallery__next" aria-label="Next">&#10095;</button>
+                    <div class="gallery__dots"></div>
                 </div>
             </div>
         </section>
@@ -510,9 +587,9 @@
                         </div>
 
                         <div class="contact__map">
-                            <iframe src="https://www.google.com/maps?q=ул.+Юрия+Двужильного+10&output=embed"
+                            <iframe src="https://yandex.ru/map-widget/v1/?text=Кемерово%2C%20улица%20Юрия%20Двужильного%2C%2010&z=16"
                                 width="100%" height="250" style="border:0; border-radius: 20px;" allowfullscreen=""
-                                loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+                                loading="lazy"
                                 title="Карта — расположение центра Мел"></iframe>
                         </div>
                     </div>
@@ -525,7 +602,7 @@
     <footer class="footer">
         <div class="container footer__inner">
             <div class="footer__brand">
-                <span class="logo__name logo__name--light">Мел</span>
+                <img src="logo_footer.svg" alt="Логотип Мел" class="footer__logo">
                 <p class="footer__desc">Детский центр развития.<br>Помогаем детям найти свою дорогу в будущее.</p>
             </div>
             <div class="footer__links">
@@ -553,7 +630,7 @@
     </footer>
 
     <script src="config.js"></script>
-    <script src="script.js"></script>
+    <script src="script.js?v=6"></script>
 </body>
 
 </html>

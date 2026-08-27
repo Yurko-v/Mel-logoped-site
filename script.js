@@ -53,7 +53,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (target) {
                 e.preventDefault();
                 const headerHeight = header.offsetHeight;
-                const targetPosition = target.getBoundingClientRect().top + window.scrollY - headerHeight - 20;
+                const targetPosition = target.getBoundingClientRect().top + window.scrollY - headerHeight;
 
                 window.scrollTo({
                     top: targetPosition,
@@ -154,8 +154,9 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             // Show loading state
-            const originalText = btn.textContent;
-            btn.textContent = 'Отправка...';
+            const btnLabel = btn.querySelector('span') || btn;
+            const originalText = btnLabel.textContent;
+            btnLabel.textContent = 'Отправка...';
             btn.disabled = true;
 
             try {
@@ -176,28 +177,151 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
 
                 // Success
-                btn.textContent = '✓ Заявка отправлена!';
+                btnLabel.textContent = '✓ Заявка отправлена!';
                 btn.style.background = '#7BA887';
                 form.reset();
 
                 setTimeout(() => {
-                    btn.textContent = originalText;
+                    btnLabel.textContent = originalText;
                     btn.style.background = '';
                     btn.disabled = false;
                 }, 3000);
 
             } catch (error) {
                 // Error
-                btn.textContent = '✗ Ошибка, попробуйте позже';
+                btnLabel.textContent = '✗ Ошибка, попробуйте позже';
                 btn.style.background = '#e05252';
 
                 setTimeout(() => {
-                    btn.textContent = originalText;
+                    btnLabel.textContent = originalText;
                     btn.style.background = '';
                     btn.disabled = false;
                 }, 3000);
             }
         });
+    }
+
+    // ── Gallery Slider ──
+    const gallerySlider = document.querySelector('.gallery__slider');
+
+    if (gallerySlider) {
+        const track = gallerySlider.querySelector('.gallery__track');
+        const slides = Array.from(gallerySlider.querySelectorAll('.gallery__slide'));
+        const prevBtn = gallerySlider.querySelector('.gallery__prev');
+        const nextBtn = gallerySlider.querySelector('.gallery__next');
+        const dotsContainer = gallerySlider.querySelector('.gallery__dots');
+        let currentIndex = 0;
+        let autoplayTimer = null;
+
+        slides.forEach((_, i) => {
+            const dot = document.createElement('button');
+            dot.className = 'gallery__dot';
+            dot.setAttribute('aria-label', `Перейти к фото ${i + 1}`);
+            dot.addEventListener('click', () => {
+                goToSlide(i);
+                restartAutoplay();
+            });
+            dotsContainer.appendChild(dot);
+        });
+        const dots = Array.from(dotsContainer.querySelectorAll('.gallery__dot'));
+
+        const updateSlider = () => {
+            track.style.transform = `translateX(-${currentIndex * 100}%)`;
+            dots.forEach((dot, i) => dot.classList.toggle('gallery__dot--active', i === currentIndex));
+        };
+
+        const goToSlide = (index) => {
+            currentIndex = (index + slides.length) % slides.length;
+            updateSlider();
+        };
+
+        const nextSlide = () => goToSlide(currentIndex + 1);
+        const prevSlide = () => goToSlide(currentIndex - 1);
+
+        const stopAutoplay = () => {
+            if (autoplayTimer) clearInterval(autoplayTimer);
+        };
+
+        const startAutoplay = () => {
+            stopAutoplay();
+            if (slides.length > 1) autoplayTimer = setInterval(nextSlide, 5000);
+        };
+
+        const restartAutoplay = () => startAutoplay();
+
+        prevBtn.addEventListener('click', () => { prevSlide(); restartAutoplay(); });
+        nextBtn.addEventListener('click', () => { nextSlide(); restartAutoplay(); });
+
+        gallerySlider.addEventListener('mouseenter', stopAutoplay);
+        gallerySlider.addEventListener('mouseleave', startAutoplay);
+        gallerySlider.addEventListener('focusin', stopAutoplay);
+        gallerySlider.addEventListener('focusout', startAutoplay);
+
+        // Touch swipe
+        let touchStartX = 0;
+        let touchStartY = 0;
+
+        track.addEventListener('touchstart', (e) => {
+            touchStartX = e.touches[0].clientX;
+            touchStartY = e.touches[0].clientY;
+        }, { passive: true });
+
+        track.addEventListener('touchend', (e) => {
+            const dx = e.changedTouches[0].clientX - touchStartX;
+            const dy = e.changedTouches[0].clientY - touchStartY;
+            if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) {
+                dx < 0 ? nextSlide() : prevSlide();
+                restartAutoplay();
+            }
+        }, { passive: true });
+
+        // Keyboard navigation
+        gallerySlider.setAttribute('tabindex', '0');
+        gallerySlider.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') { prevSlide(); restartAutoplay(); }
+            if (e.key === 'ArrowRight') { nextSlide(); restartAutoplay(); }
+        });
+
+        // Lightbox
+        const lightbox = document.createElement('div');
+        lightbox.className = 'gallery__lightbox';
+        lightbox.innerHTML = `
+            <button class="gallery__lightbox-close" aria-label="Закрыть">&times;</button>
+            <img class="gallery__lightbox-image" src="" alt="">
+        `;
+        document.body.appendChild(lightbox);
+        const lightboxImage = lightbox.querySelector('.gallery__lightbox-image');
+        const lightboxClose = lightbox.querySelector('.gallery__lightbox-close');
+
+        const openLightbox = () => {
+            const img = slides[currentIndex].querySelector('.gallery__image');
+            lightboxImage.src = img.src;
+            lightboxImage.alt = img.alt;
+            lightbox.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            stopAutoplay();
+        };
+
+        const closeLightbox = () => {
+            lightbox.classList.remove('active');
+            document.body.style.overflow = '';
+            startAutoplay();
+        };
+
+        slides.forEach(slide => {
+            slide.querySelector('.gallery__image').addEventListener('click', openLightbox);
+        });
+
+        lightboxClose.addEventListener('click', closeLightbox);
+        lightbox.addEventListener('click', (e) => {
+            if (e.target === lightbox) closeLightbox();
+        });
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && lightbox.classList.contains('active')) closeLightbox();
+        });
+
+        updateSlider();
+        startAutoplay();
     }
 
     // ── Phone input formatting ──
