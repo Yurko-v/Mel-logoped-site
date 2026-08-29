@@ -417,18 +417,6 @@ ul {
     border-color: var(--c-sage);
 }
 
-.btn--chalk-outline {
-    background: transparent;
-    color: var(--c-chalk);
-    border-color: var(--c-chalk-soft);
-}
-
-.btn--chalk-outline:hover {
-    background: var(--c-chalk);
-    color: var(--c-board);
-    transform: translateY(-2px);
-}
-
 /* Hero Visual — chalk road */
 .hero__visual {
     display: flex;
@@ -569,6 +557,18 @@ ul {
 .btn--outline:hover {
     background: var(--c-forest);
     color: var(--c-white);
+    transform: translateY(-2px);
+}
+
+.btn--chalk-outline {
+    background: transparent;
+    color: var(--c-chalk);
+    border-color: var(--c-chalk-soft);
+}
+
+.btn--chalk-outline:hover {
+    background: var(--c-chalk);
+    color: var(--c-board);
     transform: translateY(-2px);
 }
 
@@ -1614,4 +1614,694 @@ ul {
 .nav-overlay.active {
     opacity: 1;
     pointer-events: all;
+}
+
+/* ═══════════════════════════════
+   404 — СТЁРТАЯ СТРАНИЦА
+   ═══════════════════════════════ */
+.nf {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    background: radial-gradient(130% 92% at 50% 0%, var(--c-board-edge) 0%, var(--c-board) 44%, var(--c-board-deep) 100%);
+    overflow: hidden;
+    /* верхний отступ обязан быть больше высоты шапки (лого 120px + паддинги),
+       иначе текст уезжает под логотип */
+    padding: 188px 0 104px;
+}
+
+/* меловая пыль поверх доски */
+.nf::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+    opacity: 0.05;
+    mix-blend-mode: screen;
+    pointer-events: none;
+}
+
+/* холст для рисования мелом — во всю доску */
+.nf__canvas {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    cursor: cell;
+    touch-action: none;
+}
+
+.nf__inner {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    grid-template-columns: 1.05fr 1fr;
+    gap: 70px;
+    align-items: center;
+    pointer-events: none;
+    /* чтобы мел рисовался «сквозь» текст */
+}
+
+/* Утилита для текста, читаемого только скринридером — «404» как заголовок */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* «404» не текст, а меловые штрихи: каждый рисуется вдоль своего пути —
+   тем же приёмом, что подчёркивание и рисунок дороги (pathLength=100
+   нормализует длину любой кривой, поэтому dashoffset 100→0 везде одинаков). */
+.nf__num {
+    display: block;
+    width: clamp(230px, 33vw, 380px);
+    height: auto;
+    overflow: visible;
+    margin-bottom: 4px;
+    filter: url(#chalk);
+}
+
+.nf__num path {
+    fill: none;
+    stroke: var(--c-chalk);
+    stroke-width: 12;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-dasharray: 100;
+    stroke-dashoffset: 100;
+    animation: chalk-draw 0.36s var(--e-soft) forwards;
+}
+
+.nf__num .nf-zero {
+    stroke: var(--c-chalk-sun);
+}
+
+/* Порядок и темп штрихов — как у руки: наклонная линия и перекладина «4»
+   одним движением, потом короткая вертикаль; у «0» — один непрерывный овал. */
+.nf__num path:nth-of-type(1) {
+    animation-duration: 0.36s;
+    animation-delay: 0.4s;
+}
+
+.nf__num path:nth-of-type(2) {
+    animation-duration: 0.22s;
+    animation-delay: 0.74s;
+}
+
+.nf__num path:nth-of-type(3) {
+    animation-duration: 0.55s;
+    animation-delay: 0.98s;
+}
+
+.nf__num path:nth-of-type(4) {
+    animation-duration: 0.36s;
+    animation-delay: 1.58s;
+}
+
+.nf__num path:nth-of-type(5) {
+    animation-duration: 0.22s;
+    animation-delay: 1.92s;
+}
+
+@keyframes nf-chalk-in {
+    from {
+        opacity: 0;
+        transform: translateY(14px) rotate(-4deg);
+    }
+
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+.nf__underline {
+    display: block;
+    width: clamp(220px, 34vw, 400px);
+    height: 30px;
+    overflow: visible;
+    margin: 2px 0 18px;
+}
+
+.nf__underline path {
+    fill: none;
+    stroke: var(--c-chalk-sky);
+    stroke-width: 6;
+    stroke-linecap: round;
+    filter: url(#chalk);
+    stroke-dasharray: 470;
+    stroke-dashoffset: 470;
+    animation: chalk-draw 0.9s var(--e-soft) 2.05s forwards;
+}
+
+.nf__title {
+    font-family: var(--f-hand);
+    font-size: clamp(32px, 4.4vw, 50px);
+    font-weight: 600;
+    color: var(--c-chalk);
+    line-height: 1.15;
+    margin-bottom: 16px;
+    filter: url(#chalk);
+}
+
+.nf__desc {
+    font-size: 16px;
+    color: var(--c-chalk-soft);
+    max-width: 480px;
+    margin-bottom: 34px;
+}
+
+.nf__actions {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 30px;
+}
+
+.nf__actions .btn {
+    pointer-events: auto;
+}
+
+.nf .btn--primary {
+    background: var(--c-sage-dark);
+    border-color: var(--c-sage-dark);
+}
+
+.nf .btn--primary:hover {
+    background: var(--c-sage);
+    border-color: var(--c-sage);
+}
+
+.nf__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 22px;
+    font-size: 14px;
+    color: var(--c-chalk-faint);
+    align-items: baseline;
+}
+
+.nf__links span {
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-size: 12px;
+}
+
+.nf__links a {
+    pointer-events: auto;
+    color: var(--c-chalk-soft);
+    border-bottom: 1px dashed var(--c-chalk-faint);
+    padding-bottom: 2px;
+}
+
+.nf__links a:hover {
+    color: var(--c-chalk);
+    border-bottom-color: var(--c-chalk);
+}
+
+/* Правая часть — меловой рисунок «дорога потерялась» */
+.nf__visual {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.nf__doodle {
+    width: min(46vw, 440px);
+    height: auto;
+    overflow: visible;
+}
+
+.nf__doodle .nf-road {
+    fill: none;
+    stroke: var(--c-chalk-soft);
+    stroke-width: 3.5;
+    stroke-linecap: round;
+    stroke-dasharray: 3 16;
+    filter: url(#chalk);
+}
+
+.nf__doodle .nf-ink {
+    fill: none;
+    stroke: var(--c-chalk);
+    stroke-width: 4;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    filter: url(#chalk);
+    stroke-dasharray: 620;
+    stroke-dashoffset: 620;
+    animation: chalk-draw 1.7s var(--e-soft) 0.35s forwards;
+}
+
+.nf__doodle .nf-sun {
+    stroke: var(--c-chalk-sun);
+}
+
+.nf__doodle .nf-sky {
+    stroke: var(--c-chalk-sky);
+}
+
+.nf__doodle .nf-label {
+    font-family: var(--f-hand);
+    font-size: 28px;
+    fill: var(--c-chalk-sun);
+    filter: url(#chalk);
+}
+
+.nf__doodle .nf-q {
+    font-family: var(--f-brand);
+    font-size: 74px;
+    font-weight: 700;
+    fill: var(--c-chalk-sky);
+    filter: url(#chalk);
+    opacity: 0;
+    animation: nf-chalk-in 0.7s var(--e-soft) 1.9s forwards;
+}
+
+/* Подсказка про рисование + кнопка «Стереть» на лотке */
+.nf__tray {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 3;
+    min-height: 28px;
+    background: linear-gradient(180deg, var(--c-wood) 0%, var(--c-wood-dk) 100%);
+    border-top: 2px solid rgba(0, 0, 0, 0.2);
+    box-shadow: inset 0 3px 6px rgba(255, 255, 255, 0.25), inset 0 -4px 8px rgba(0, 0, 0, 0.25);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 6px max(24px, 6vw);
+}
+
+.nf__tray .hero__chalk {
+    flex: none;
+}
+
+.nf__hint {
+    font-family: var(--f-hand);
+    font-size: 19px;
+    color: rgba(40, 26, 12, 0.75);
+    margin-left: 6px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.nf__erase {
+    margin-left: auto;
+    flex: none;
+    font-family: var(--f-body);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: rgba(40, 26, 12, 0.8);
+    background: linear-gradient(180deg, #f6efe2 0%, #ded3c0 100%);
+    border: 1px solid rgba(0, 0, 0, 0.18);
+    border-radius: 6px;
+    padding: 7px 16px;
+    cursor: pointer;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8), 0 2px 4px rgba(0, 0, 0, 0.22);
+    transition: transform var(--t-fast), box-shadow var(--t-fast);
+}
+
+.nf__erase:hover {
+    transform: translateY(-1px);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9), 0 4px 8px rgba(0, 0, 0, 0.25);
+}
+
+.nf__erase:active {
+    transform: translateY(1px);
+}
+
+/* Невысокие ноутбуки: сжимаем блок, чтобы кнопки остались в первом экране */
+@media (min-width: 769px) and (max-height: 840px) {
+    .nf {
+        padding: 176px 0 72px;
+    }
+
+    .nf__num {
+        width: clamp(190px, 24vw, 270px);
+    }
+
+    .nf__underline {
+        height: 22px;
+        margin-bottom: 10px;
+    }
+
+    .nf__title {
+        font-size: clamp(28px, 3.4vw, 40px);
+        margin-bottom: 12px;
+    }
+
+    .nf__desc {
+        margin-bottom: 24px;
+    }
+
+    .nf__actions {
+        margin-bottom: 20px;
+    }
+
+    .nf__doodle {
+        width: min(38vw, 340px);
+    }
+}
+
+@media (max-width: 960px) {
+    .nf__inner {
+        grid-template-columns: 1fr;
+        gap: 32px;
+        text-align: center;
+    }
+
+    .nf__actions,
+    .nf__links {
+        justify-content: center;
+    }
+
+    .nf__num {
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .nf__underline {
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .nf__desc {
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .nf__doodle {
+        width: min(72vw, 300px);
+    }
+}
+
+/* Мобильные: шапка низкая (лого 50px), текст начинается выше */
+@media (max-width: 768px) {
+    .nf {
+        padding: 112px 0 96px;
+    }
+
+    .nf__actions {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+    }
+}
+
+@media (max-width: 600px) {
+    .nf__hint {
+        display: none;
+    }
+
+    .nf__doodle {
+        width: min(64vw, 240px);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    .nf__num path,
+    .nf__underline path,
+    .nf__doodle .nf-ink,
+    .nf__doodle .nf-q {
+        animation: none;
+        opacity: 1;
+        stroke-dashoffset: 0;
+    }
+}
+
+/* ═══════════════════════════════
+   ПЛАВНОСТЬ: ДВИЖЕНИЕ ПО ВСЕМУ САЙТУ
+   Блок идёт последним: переопределяет переходы,
+   объявленные выше, не трогая раскладку и цвета.
+   ═══════════════════════════════ */
+:root {
+    /* мягкое торможение — основная кривая для появления и ховеров */
+    --e-out: cubic-bezier(0.22, 1, 0.36, 1);
+    --e-soft: cubic-bezier(0.33, 1, 0.68, 1);
+}
+
+/* ── Появление при скролле ── */
+.animate-on-scroll {
+    transform: translateY(28px);
+    transition: opacity 0.9s var(--e-out), transform 0.9s var(--e-out);
+}
+
+/* Герой собирается по строкам, а не всплывает целиком */
+.hero__subtitle.animate-on-scroll {
+    transition-delay: 0.06s;
+}
+
+.hero__title.animate-on-scroll {
+    transition-delay: 0.14s;
+}
+
+.hero__slogan.animate-on-scroll {
+    transition-delay: 0.22s;
+}
+
+.hero__specialists.animate-on-scroll {
+    transition-delay: 0.3s;
+}
+
+.hero__actions.animate-on-scroll {
+    transition-delay: 0.38s;
+}
+
+.hero__visual.animate-on-scroll {
+    transition-delay: 0.46s;
+}
+
+/* ── Карточки ──
+   Одна декларация и на появление, и на ховер: .animate-on-scroll идёт
+   выше по файлу и иначе перебивает ховер-переход, отчего подъём тормозит. */
+.about__card,
+.service-card,
+.specialist-card,
+.review-card {
+    transition:
+        opacity 0.85s var(--e-out),
+        transform 0.6s var(--e-out),
+        box-shadow 0.6s var(--e-out),
+        border-color 0.6s var(--e-out);
+}
+
+.about__card-icon,
+.service-card__icon {
+    transition: transform 0.6s var(--e-out);
+}
+
+.gallery__image {
+    transition: transform 0.7s var(--e-out);
+}
+
+/* ── Кнопки: точный список свойств вместо all ── */
+.btn {
+    transition:
+        background-color 0.42s var(--e-out),
+        border-color 0.42s var(--e-out),
+        color 0.42s var(--e-out),
+        transform 0.32s var(--e-out),
+        box-shadow 0.42s var(--e-out);
+}
+
+/* ── Навигация ── */
+.nav__link::after {
+    transition: width 0.45s var(--e-out);
+}
+
+.nav__link--cta {
+    transition: background 0.42s var(--e-out), transform 0.32s var(--e-out);
+}
+
+/* ── Галерея ── */
+.gallery__track {
+    transition: transform 0.7s var(--e-out);
+}
+
+.gallery__prev,
+.gallery__next {
+    transition: background 0.4s var(--e-out), color 0.4s var(--e-out), transform 0.4s var(--e-out);
+}
+
+.gallery__dot {
+    transition: width 0.5s var(--e-out), border-radius 0.5s var(--e-out), background 0.4s var(--e-out);
+}
+
+.gallery__lightbox {
+    transition: opacity 0.45s var(--e-out);
+}
+
+.gallery__lightbox-image {
+    transform: scale(0.96);
+    transition: transform 0.55s var(--e-out);
+}
+
+.gallery__lightbox.active .gallery__lightbox-image {
+    transform: scale(1);
+}
+
+/* ── FAQ ── */
+.faq-item__answer {
+    transition: max-height 0.55s var(--e-out), padding 0.55s var(--e-out);
+}
+
+.faq-item__icon {
+    transition: transform 0.45s var(--e-out);
+}
+
+/* ── Форма ── */
+.contact-form__field input,
+.contact-form__field textarea {
+    transition: border-color 0.4s var(--e-out), box-shadow 0.4s var(--e-out);
+}
+
+/* ═══════════════════════════════
+   ПЛАВНОСТЬ: СТРАНИЦА 404
+   ═══════════════════════════════ */
+
+/* Текст проявляется по строкам — после того, как мел дописал «404» */
+.nf .hero__subtitle,
+.nf__title,
+.nf__desc,
+.nf__actions,
+.nf__links {
+    opacity: 0;
+    animation: nf-rise 0.85s var(--e-out) forwards;
+}
+
+.nf .hero__subtitle {
+    animation-delay: 0.1s;
+}
+
+.nf__title {
+    animation-delay: 2.3s;
+}
+
+.nf__desc {
+    animation-delay: 2.5s;
+}
+
+.nf__actions {
+    animation-delay: 2.7s;
+}
+
+.nf__links {
+    animation-delay: 2.9s;
+}
+
+@keyframes nf-rise {
+    from {
+        opacity: 0;
+        transform: translateY(16px);
+    }
+
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+/* Деревянный лоток выезжает снизу */
+.nf__tray {
+    animation: nf-tray-in 0.9s var(--e-out) 0.2s both;
+}
+
+@keyframes nf-tray-in {
+    from {
+        transform: translateY(100%);
+    }
+
+    to {
+        transform: translateY(0);
+    }
+}
+
+/* Вопросительный знак над головой — лёгкое покачивание после отрисовки */
+.nf__doodle .nf-q {
+    animation: nf-chalk-in 0.7s var(--e-soft) 1.9s forwards, nf-float 3.6s ease-in-out 2.6s infinite;
+}
+
+@keyframes nf-float {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-7px);
+    }
+}
+
+/* Стирание доски: мел плавно исчезает, а не пропадает рывком */
+.nf__canvas {
+    transition: opacity 0.32s var(--e-soft);
+}
+
+.nf__canvas--wiping {
+    opacity: 0;
+}
+
+/* ═══════════════════════════════
+   Уважение к системной настройке «меньше движения»
+   ═══════════════════════════════ */
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+
+    .animate-on-scroll {
+        opacity: 1;
+        transform: none;
+    }
+
+    .nf .hero__subtitle,
+    .nf__title,
+    .nf__desc,
+    .nf__actions,
+    .nf__links {
+        opacity: 1;
+    }
+
+    /* Анимация входа не должна оставлять элемент в стартовом (скрытом)
+       положении, если она не проигралась: сбрасываем в конечное состояние. */
+    .nf__tray {
+        animation: none;
+        transform: none;
+    }
+
+    .nf__doodle .nf-q {
+        animation: none;
+        opacity: 1;
+    }
+
+    .nf__underline path,
+    .nf__doodle .nf-ink,
+    .nf__num path {
+        stroke-dashoffset: 0;
+    }
+
+    .gallery__lightbox-image {
+        transform: none;
+    }
 }

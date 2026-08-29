@@ -12,6 +12,7 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, HTMLResponse, JSONResponse
 from pydantic import BaseModel, field_validator
+from starlette.exceptions import HTTPException as StarletteHTTPException
 
 BACKEND_DIR = Path(__file__).resolve().parent
 SITE_DIR = BACKEND_DIR.parent
@@ -35,13 +36,14 @@ app.add_middleware(
 )
 
 
-def build_index_html() -> str:
-    """Склеивает index.html, style.css и script.js в один HTML-файл.
+def build_page_html(page_name: str) -> str:
+    """Склеивает HTML-страницу со style.css и script.js в один файл.
 
-    Источники правды остаются в корне проекта (index.html/style.css/script.js) —
+    Источники правды остаются в корне проекта (index.html/404.html/style.css/script.js) —
     склейка происходит один раз при старте сервера, а не хранится отдельным файлом.
+    Страница без <script src="script.js"> (например, 404) просто не получит подстановку.
     """
-    html = (SITE_DIR / "index.html").read_text(encoding="utf-8")
+    html = (SITE_DIR / page_name).read_text(encoding="utf-8")
     css = (SITE_DIR / "style.css").read_text(encoding="utf-8")
     script_js = (SITE_DIR / "script.js").read_text(encoding="utf-8")
 
@@ -64,7 +66,8 @@ def build_index_html() -> str:
     return html
 
 
-INDEX_HTML = build_index_html()
+INDEX_HTML = build_page_html("index.html")
+NOT_FOUND_HTML = build_page_html("404.html")
 
 # Явные маршруты для картинок/иконок вместо монтирования всей папки проекта —
 # чтобы наружу не утекли backend/.env и прочие файлы репозитория.
@@ -118,8 +121,13 @@ def validation_error_handler(request: Request, exc: RequestValidationError):
     return JSONResponse(status_code=400, content={"ok": False, "error": message})
 
 
-@app.exception_handler(HTTPException)
-def http_exception_handler(request: Request, exc: HTTPException):
+# Обработчик вешаем на starlette-версию HTTPException: fastapi.HTTPException — её наследник,
+# а несуществующий маршрут роутер отдаёт именно как starlette-исключение.
+@app.exception_handler(StarletteHTTPException)
+def http_exception_handler(request: Request, exc: StarletteHTTPException):
+    # Человеку — меловая страница 404, API-клиенту — привычный JSON.
+    if exc.status_code == 404 and not request.url.path.startswith("/api"):
+        return HTMLResponse(content=NOT_FOUND_HTML, status_code=404)
     return JSONResponse(status_code=exc.status_code, content={"ok": False, "error": exc.detail})
 
 

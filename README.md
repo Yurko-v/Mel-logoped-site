@@ -40,7 +40,7 @@
 
 ## 🚀 Запуск
 
-Сайт и бэкенд теперь — одно FastAPI-приложение: при старте сервер склеивает `index.html` + `style.css` + `script.js` в один HTML и сам его раздаёт, плюс обрабатывает `/api/contact`. Один процесс — весь сайт.
+Сайт и бэкенд теперь — одно FastAPI-приложение: при старте сервер склеивает `index.html` + `style.css` + `script.js` в один HTML и сам его раздаёт, плюс обрабатывает `/api/contact`. Один процесс — весь сайт. Любой неизвестный адрес (кроме `/api/*`, где остаётся JSON) отдаёт страницу [404.html](404.html) со статусом 404.
 
 ```bash
 cd backend
@@ -101,6 +101,7 @@ touch ~/uravelik.beget.tech/tmp/restart.txt   # перезапуск Passenger
 
 ```
 ├── index.html            # Основная страница
+├── 404.html              # Страница «не найдено» (меловая доска, можно порисовать)
 ├── style.css             # Стили (адаптив, анимации, компоненты)
 ├── script.js             # Логика (меню, FAQ, форма, запрос к бэкенду)
 ├── config.js             # URL бэкенда (API_URL)
@@ -108,7 +109,7 @@ touch ~/uravelik.beget.tech/tmp/restart.txt   # перезапуск Passenger
 ├── favicon.ico           # Иконка вкладки
 ├── 1.png, 2.png          # Фотографии галереи
 ├── backend/              # Python (FastAPI) бэкенд для приёма заявок
-│   ├── app.py            # Раздаёт сайт (склейка HTML+CSS+JS) + POST /api/contact → Telegram
+│   ├── app.py            # Раздаёт сайт и 404-страницу (склейка HTML+CSS+JS) + POST /api/contact → Telegram
 │   ├── passenger_wsgi.py # Точка входа для Passenger-хостингов (WSGI-обёртка над FastAPI)
 │   ├── requirements.txt  # Зависимости
 │   └── .env.example      # Шаблон секретов (токен бота, chat id)

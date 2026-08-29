@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Страница стёрлась с доски — Детский центр «Мел»</title>
+    <meta name="description"
+        content="Страница не найдена. Вернитесь на главную сайта детского центра развития «Мел» в Кемерово." />
+    <meta name="robots" content="noindex, follow" />
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&family=Unbounded:wght@400;500;600;700&display=swap"
+        rel="stylesheet" />
+
+    <link rel="stylesheet" href="style.css?v=25" />
+</head>
+
+<body>
+
+    <!-- Меловой SVG-фильтр (шероховатость мела) -->
+    <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+        <filter id="chalk" x="-20%" y="-20%" width="140%" height="140%">
+            <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" result="n" />
+            <feDisplacementMap in="SourceGraphic" in2="n" scale="2.2" xChannelSelector="R" yChannelSelector="G" />
+        </filter>
+    </svg>
+
+    <!-- ═══════════════ HEADER ═══════════════ -->
+    <header class="header" id="header">
+        <div class="container header__inner">
+            <a href="/" class="logo">
+                <img src="logo_footer.svg" alt="Логотип Мел" class="logo__image">
+            </a>
+
+            <nav class="nav">
+                <ul class="nav__list">
+                    <li><a href="/#about" class="nav__link">О центре</a></li>
+                    <li><a href="/#services" class="nav__link">Услуги</a></li>
+                    <li><a href="/#specialists" class="nav__link">Специалисты</a></li>
+                    <li><a href="/#faq" class="nav__link">FAQ</a></li>
+                    <li><a href="/#contact" class="nav__link nav__link--cta">Записаться</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <!-- ═══════════════ 404 — МЕЛОВАЯ ДОСКА ═══════════════ -->
+        <section class="nf">
+            <canvas class="nf__canvas" id="board" aria-hidden="true"></canvas>
+
+            <div class="container nf__inner">
+                <div class="nf__content">
+                    <p class="hero__subtitle">Ошибка 404 · страница не найдена</p>
+                    <h1><span class="sr-only">404</span><svg class="nf__num" viewBox="0 0 290 132"
+                            aria-hidden="true">
+                            <path pathLength="100" d="M62 14 C 55 24, 30 60, 14 84 L 82 84" />
+                            <path pathLength="100" d="M66 30 C 64 58, 60 90, 56 118" />
+                            <path class="nf-zero" pathLength="100"
+                                d="M152 18 C 127 17, 107 46, 106 76 C 105 101, 119 117, 137 114 C 160 110, 177 79, 172 49 C 168 27, 158 16, 146 18" />
+                            <path pathLength="100" d="M252 14 C 245 24, 220 60, 204 84 L 272 84" />
+                            <path pathLength="100" d="M256 30 C 254 58, 250 90, 246 118" />
+                        </svg></h1>
+                    <svg class="nf__underline" viewBox="0 0 440 34" aria-hidden="true">
+                        <path d="M6 20 C 90 30, 150 8, 230 16 S 380 28, 434 14" />
+                    </svg>
+                    <p class="nf__title">Кажется, эту страницу<br>стёрли с доски</p>
+                    <p class="nf__desc">Такой страницы у нас нет — возможно, в адресе опечатка или страница переехала.
+                        Но дорога в будущее никуда не делась: вернитесь на главную или запишитесь на консультацию, мы
+                        поможем.</p>
+
+                    <div class="nf__actions">
+                        <a href="/" class="btn btn--primary">Вернуться на главную</a>
+                        <a href="/#contact" class="btn btn--chalk-outline"><span>Записаться на консультацию</span></a>
+                    </div>
+
+                    <div class="nf__links">
+                        <span>Часто ищут:</span>
+                        <a href="/#services">Услуги</a>
+                        <a href="/#specialists">Специалисты</a>
+                        <a href="/#faq">Вопросы и ответы</a>
+                        <a href="tel:+79502702967">8 950 270 29 67</a>
+                    </div>
+                </div>
+
+                <div class="nf__visual" aria-hidden="true">
+                    <svg class="nf__doodle" viewBox="0 0 440 330">
+                        <!-- солнышко в углу -->
+                        <path class="nf-ink nf-sun"
+                            d="M58 54 m-20 0 a20 20 0 1 0 40 0 a20 20 0 1 0 -40 0 M58 20 v-12 M58 100 v12 M24 54 h-12 M92 54 h12 M34 30 l-9 -9 M82 78 l9 9 M82 30 l9 -9 M34 78 l-9 9" />
+                        <!-- дорога, которая обрывается -->
+                        <path class="nf-road" d="M10 300 C 110 296, 175 268, 250 256 S 330 250, 352 248" />
+                        <path class="nf-road" style="opacity:.3" d="M352 248 C 380 246, 404 244, 430 243" />
+                        <!-- след от тряпки: тут дорогу стёрли -->
+                        <ellipse cx="392" cy="243" rx="48" ry="27" fill="rgba(241,236,224,0.09)" />
+                        <!-- ребёнок стоит у обрыва дороги -->
+                        <path class="nf-ink"
+                            d="M296 168 m-21 0 a21 21 0 1 0 42 0 a21 21 0 1 0 -42 0 M296 189 v44 M296 233 l-16 23 M296 233 l17 23 M274 210 l22 -9 M296 201 l22 -19" />
+                        <!-- вопросительный знак над головой -->
+                        <text class="nf-q" x="344" y="150">?</text>
+                        <!-- подпись -->
+                        <text class="nf-label" x="220" y="318" text-anchor="middle">дорога тут стёрлась…</text>
+                    </svg>
+                </div>
+            </div>
+
+            <!-- деревянный лоток с мелками -->
+            <div class="nf__tray">
+                <span class="hero__chalk hero__chalk--a" aria-hidden="true"></span>
+                <span class="hero__chalk hero__chalk--b" aria-hidden="true"></span>
+                <span class="hero__chalk hero__chalk--c" aria-hidden="true"></span>
+                <span class="nf__hint" id="hint">Пока вы здесь — порисуйте на доске мелом ✏️</span>
+                <button class="nf__erase" id="erase" type="button">Стереть доску</button>
+            </div>
+        </section>
+    </main>
+
+    <!-- ═══════════════ FOOTER ═══════════════ -->
+    <footer class="footer">
+        <div class="container footer__inner">
+            <div class="footer__brand">
+                <img src="logo_footer.svg" alt="Логотип Мел" class="footer__logo">
+                <p class="footer__desc">Детский центр развития.<br>Помогаем детям найти свою дорогу в будущее.</p>
+            </div>
+            <div class="footer__links">
+                <h4>Навигация</h4>
+                <ul>
+                    <li><a href="/#about">О центре</a></li>
+                    <li><a href="/#services">Услуги</a></li>
+                    <li><a href="/#specialists">Специалисты</a></li>
+                    <li><a href="/#reviews">Отзывы</a></li>
+                    <li><a href="/#faq">FAQ</a></li>
+                </ul>
+            </div>
+            <div class="footer__contacts">
+                <h4>Контакты</h4>
+                <p><a href="tel:+79502702967">8 950 270 29 67</a></p>
+                <p>ул. Юрия Двужильного, 10</p>
+                <p>Пн–Сб: 9:00 – 19:00</p>
+            </div>
+        </div>
+        <div class="footer__bottom">
+            <div class="container">
+                <p>© 2026 Детский центр развития «Мел». Все права защищены.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        /* Липкая шапка: тёмный фон и тень появляются после начала прокрутки —
+           страница 404 отдаётся отдельным файлом и не подключает script.js,
+           поэтому без этого блока шапка навсегда остаётся прозрачной. */
+        (function () {
+            const header = document.getElementById('header');
+            if (!header) return;
+            const onScroll = () => header.classList.toggle('header--scrolled', window.scrollY > 40);
+            window.addEventListener('scroll', onScroll, { passive: true });
+            onScroll();
+        })();
+
+        /* Меловой холст: по доске можно рисовать мышью или пальцем. */
+        (function () {
+            const canvas = document.getElementById('board');
+            const hint = document.getElementById('hint');
+            const eraseBtn = document.getElementById('erase');
+            if (!canvas || !canvas.getContext) return;
+
+            const ctx = canvas.getContext('2d');
+            const palette = ['#f1ece0', '#e6c878', '#9fc9d3', '#E8A87C', '#A8D5BA'];
+            let color = palette[0];
+            let drawing = false;
+            let last = null;
+            let touched = false;
+
+            function fit() {
+                const rect = canvas.getBoundingClientRect();
+                const dpr = Math.min(window.devicePixelRatio || 1, 2);
+                const w = Math.round(rect.width * dpr);
+                const h = Math.round(rect.height * dpr);
+                if (!w || !h || (canvas.width === w && canvas.height === h)) return;
+
+                // Размер холста обязан совпадать с его CSS-размером, иначе мел
+                // рисуется со смещением от курсора. Смена размера чистит битмап,
+                // поэтому переносим уже нарисованное на новый холст.
+                let snapshot = null;
+                if (canvas.width > 1 && canvas.height > 1) {
+                    snapshot = document.createElement('canvas');
+                    snapshot.width = canvas.width;
+                    snapshot.height = canvas.height;
+                    snapshot.getContext('2d').drawImage(canvas, 0, 0);
+                }
+
+                canvas.width = w;
+                canvas.height = h;
+                ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+                ctx.lineCap = 'round';
+                ctx.lineJoin = 'round';
+                if (snapshot) ctx.drawImage(snapshot, 0, 0, rect.width, rect.height);
+            }
+
+            function pos(e) {
+                const rect = canvas.getBoundingClientRect();
+                return { x: e.clientX - rect.left, y: e.clientY - rect.top };
+            }
+
+            function stroke(from, to) {
+                ctx.globalAlpha = 0.72;
+                ctx.strokeStyle = color;
+                ctx.lineWidth = 7;
+                ctx.beginPath();
+                ctx.moveTo(from.x, from.y);
+                ctx.lineTo(to.x, to.y);
+                ctx.stroke();
+
+                // меловая крошка вдоль штриха
+                const dist = Math.hypot(to.x - from.x, to.y - from.y);
+                const dust = Math.min(Math.round(dist * 0.8), 60);
+                ctx.fillStyle = color;
+                for (let i = 0; i < dust; i++) {
+                    const t = Math.random();
+                    ctx.globalAlpha = Math.random() * 0.28;
+                    ctx.fillRect(
+                        from.x + (to.x - from.x) * t + (Math.random() - 0.5) * 11,
+                        from.y + (to.y - from.y) * t + (Math.random() - 0.5) * 11,
+                        1.7, 1.7
+                    );
+                }
+                ctx.globalAlpha = 1;
+            }
+
+            canvas.addEventListener('pointerdown', function (e) {
+                fit();
+                drawing = true;
+                color = palette[Math.floor(Math.random() * palette.length)];
+                last = pos(e);
+                stroke(last, { x: last.x + 0.1, y: last.y + 0.1 });
+                if (canvas.setPointerCapture) canvas.setPointerCapture(e.pointerId);
+                if (!touched) {
+                    touched = true;
+                    if (hint) hint.textContent = 'Вот так! Рисуйте сколько хотите 🎨';
+                }
+            });
+
+            canvas.addEventListener('pointermove', function (e) {
+                if (!drawing) return;
+                const p = pos(e);
+                stroke(last, p);
+                last = p;
+            });
+
+            ['pointerup', 'pointercancel', 'pointerleave'].forEach(function (type) {
+                canvas.addEventListener(type, function () { drawing = false; });
+            });
+
+            if (eraseBtn) {
+                let wipeTimer = null;
+                eraseBtn.addEventListener('click', function () {
+                    // Сначала мел плавно бледнеет, и только потом холст очищается —
+                    // так стирание выглядит как проход тряпкой, а не мгновенный сброс.
+                    canvas.classList.add('nf__canvas--wiping');
+                    window.clearTimeout(wipeTimer);
+                    wipeTimer = window.setTimeout(function () {
+                        ctx.clearRect(0, 0, canvas.width, canvas.height);
+                        canvas.classList.remove('nf__canvas--wiping');
+                    }, 320);
+                    if (hint) hint.textContent = 'Чистая доска. Можно начинать заново ✏️';
+                });
+            }
+
+            // Высота доски меняется после подгрузки шрифтов — следим за самим элементом.
+            if (window.ResizeObserver) {
+                new ResizeObserver(fit).observe(canvas);
+            } else {
+                window.addEventListener('resize', fit);
+            }
+            fit();
+        })();
+    </script>
+</body>
+
+</html>
