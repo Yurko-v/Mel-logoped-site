@@ -14,10 +14,124 @@
         href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&family=Unbounded:wght@400;500;600;700&display=swap"
         rel="stylesheet" />
 
-    <link rel="stylesheet" href="style.css?v=29" />
+    <link rel="stylesheet" href="style.css?v=32" />
 </head>
 
 <body>
+    <!-- Иконки: линия + мягкое цветное пятно (класс .acc красится через --tint) -->
+    <svg xmlns="http://www.w3.org/2000/svg" style="display:none">
+        <symbol id="i-books" viewBox="0 0 32 32">
+            <rect class="acc"
+                style="fill:var(--tint);stroke:none;transform:translate(var(--acc-shift),var(--acc-shift));transition:transform .6s cubic-bezier(.22,1,.36,1)"
+                x="6" y="8" width="6" height="18" rx="1.5" />
+            <rect x="6" y="8" width="6" height="18" rx="1.5" />
+            <rect x="12" y="5" width="6" height="21" rx="1.5" />
+            <path d="M19.5 10.5l5.2-1.4 4.4 16.4-5.2 1.4z" />
+            <path d="M6 12.5h6M12 9.5h6M6 21.5h6M12 21.5h6M3.5 27h25" />
+        </symbol>
+        <symbol id="i-people" viewBox="0 0 32 32">
+            <circle class="acc"
+                style="fill:var(--tint);stroke:none;transform:translate(var(--acc-shift),var(--acc-shift));transition:transform .6s cubic-bezier(.22,1,.36,1)"
+                cx="13" cy="19" r="7" />
+            <circle cx="11" cy="11" r="3.5" />
+            <circle cx="21.5" cy="12.5" r="3" />
+            <path d="M4 26c.4-4.6 3.3-7.5 7-7.5s6.6 2.9 7 7.5" />
+            <path d="M18.5 19.6c.9-.7 1.9-1.1 3-1.1 3.3 0 5.9 2.6 6.3 6.5" />
+        </symbol>
+        <symbol id="i-heart" viewBox="0 0 32 32">
+            <circle class="acc"
+                style="fill:var(--tint);stroke:none;transform:translate(var(--acc-shift),var(--acc-shift));transition:transform .6s cubic-bezier(.22,1,.36,1)"
+                cx="20.5" cy="11" r="6" />
+            <path d="M16 26s-10-6.2-10-13a5.5 5.5 0 0 1 10-3.2A5.5 5.5 0 0 1 26 13c0 6.8-10 13-10 13z" />
+            <path d="M8.5 15.5h4l1.8-3.5 3 7 1.7-3.5h4.5" />
+        </symbol>
+        <symbol id="i-bubble" viewBox="0 0 32 32">
+            <rect class="acc"
+                style="fill:var(--tint);stroke:none;transform:translate(var(--acc-shift),var(--acc-shift));transition:transform .6s cubic-bezier(.22,1,.36,1)"
+                x="9" y="9" width="19" height="14" rx="3" />
+            <path
+                d="M6 8.5A2.5 2.5 0 0 1 8.5 6h15A2.5 2.5 0 0 1 26 8.5v10a2.5 2.5 0 0 1-2.5 2.5H14l-5.5 4.5V21H8.5A2.5 2.5 0 0 1 6 18.5z" />
+            <path d="M11 13.5h.01M16 13.5h.01M21 13.5h.01" stroke-width="2.6" />
+        </symbol>
+        <symbol id="i-sprout" viewBox="0 0 32 32">
+            <path class="acc"
+                style="fill:var(--tint);stroke:none;transform:translate(var(--acc-shift),var(--acc-shift));transition:transform .6s cubic-bezier(.22,1,.36,1)"
+                d="M16 17c-5.5 0-9-3-9-9 5.5 0 9 3 9 9z" />
+            <path d="M16 27V14" />
+            <path d="M16 17c-5.5 0-9-3-9-9 5.5 0 9 3 9 9z" />
+            <path d="M16 14c0-4.5 3-7.5 8-7.5 0 4.5-3 7.5-8 7.5z" />
+            <path d="M9 27h14" />
+        </symbol>
+        <symbol id="i-puzzle" viewBox="0 0 32 32">
+            <circle class="acc"
+                style="fill:var(--tint);stroke:none;transform:translate(var(--acc-shift),var(--acc-shift));transition:transform .6s cubic-bezier(.22,1,.36,1)"
+                cx="12" cy="15" r="6" />
+            <path d="M7 11h5a3 3 0 1 1 6 0h5v5a3 3 0 1 1 0 6v5h-5a3 3 0 1 0-6 0H7v-5a3 3 0 1 0 0-6z" />
+        </symbol>
+        <symbol id="i-search" viewBox="0 0 32 32">
+            <circle class="acc"
+                style="fill:var(--tint);stroke:none;transform:translate(var(--acc-shift),var(--acc-shift));transition:transform .6s cubic-bezier(.22,1,.36,1)"
+                cx="14" cy="14" r="8" />
+            <circle cx="14" cy="14" r="8" />
+            <path d="M20 20l6.5 6.5" />
+            <path d="M10.5 14.2l2.5 2.5 4.8-5" />
+        </symbol>
+        <symbol id="i-book" viewBox="0 0 32 32">
+            <path class="acc"
+                style="fill:var(--tint);stroke:none;transform:translate(var(--acc-shift),var(--acc-shift));transition:transform .6s cubic-bezier(.22,1,.36,1)"
+                d="M16 9.5c-2.5-2-6-2.8-10-2.5v16c4-.3 7.5.5 10 2.5z" />
+            <path d="M16 9.5c-2.5-2-6-2.8-10-2.5v16c4-.3 7.5.5 10 2.5 2.5-2 6-2.8 10-2.5V7c-4-.3-7.5.5-10 2.5z" />
+            <path d="M16 9.5v16" />
+        </symbol>
+        <symbol id="i-waves" viewBox="0 0 32 32">
+            <circle class="acc"
+                style="fill:var(--tint);stroke:none;transform:translate(var(--acc-shift),var(--acc-shift));transition:transform .6s cubic-bezier(.22,1,.36,1)"
+                cx="8.5" cy="16" r="4.5" />
+            <circle cx="8.5" cy="16" r="2.5" />
+            <path d="M13.5 12a5 5 0 0 1 0 8" />
+            <path d="M17.5 8.5a9 9 0 0 1 0 15" />
+            <path d="M21.5 5a13 13 0 0 1 0 22" />
+        </symbol>
+        <symbol id="i-chat" viewBox="0 0 32 32">
+            <path class="acc"
+                style="fill:var(--tint);stroke:none;transform:translate(var(--acc-shift),var(--acc-shift));transition:transform .6s cubic-bezier(.22,1,.36,1)"
+                d="M5 9a3 3 0 0 1 3-3h10a3 3 0 0 1 3 3v6a3 3 0 0 1-3 3h-6l-4 3.5V18a3 3 0 0 1-3-3z" />
+            <path d="M5 9a3 3 0 0 1 3-3h10a3 3 0 0 1 3 3v6a3 3 0 0 1-3 3h-6l-4 3.5V18a3 3 0 0 1-3-3z" />
+            <path d="M21 12h4a2.5 2.5 0 0 1 2.5 2.5v6A2.5 2.5 0 0 1 25 23v3.5L21 23h-4.5a2.5 2.5 0 0 1-2.5-2.5V21" />
+        </symbol>
+        <symbol id="i-cycle" viewBox="0 0 32 32">
+            <circle class="acc"
+                style="fill:var(--tint);stroke:none;transform:translate(var(--acc-shift),var(--acc-shift));transition:transform .6s cubic-bezier(.22,1,.36,1)"
+                cx="16" cy="16" r="5" />
+            <path d="M7 15a9 9 0 0 1 16.5-5" />
+            <path d="M24 5v5h-5" />
+            <path d="M25 17a9 9 0 0 1-16.5 5" />
+            <path d="M8 27v-5h5" />
+        </symbol>
+        <symbol id="i-group" viewBox="0 0 32 32">
+            <circle class="acc"
+                style="fill:var(--tint);stroke:none;transform:translate(var(--acc-shift),var(--acc-shift));transition:transform .6s cubic-bezier(.22,1,.36,1)"
+                cx="16" cy="20" r="7" />
+            <circle cx="16" cy="10" r="3.2" />
+            <circle cx="8.5" cy="13" r="2.6" />
+            <circle cx="23.5" cy="13" r="2.6" />
+            <path d="M10.5 26c0-3.6 2.5-6.5 5.5-6.5s5.5 2.9 5.5 6.5" />
+            <path d="M4 25c0-3 2-5.2 4.5-5.2 1.1 0 2.1.4 2.9 1.1M28 25c0-3-2-5.2-4.5-5.2-1.1 0-2.1.4-2.9 1.1" />
+        </symbol>
+        <symbol id="i-phone" viewBox="0 0 24 24">
+            <path
+                d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+        </symbol>
+        <symbol id="i-pin" viewBox="0 0 24 24">
+            <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z" />
+            <circle cx="12" cy="10" r="3" />
+        </symbol>
+        <symbol id="i-clock" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="10" />
+            <path d="M12 6v6l4 2" />
+        </symbol>
+    </svg>
+
 
     <!-- Меловой SVG-фильтр (шероховатость мела) -->
     <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -135,35 +249,53 @@
 
                 <div class="about__grid">
                     <div class="about__card animate-on-scroll">
-                        <div class="about__card-icon">📚</div>
+                        <div class="about__card-icon ico"><span class="ico__blob"></span><svg class="ico__svg"
+                                aria-hidden="true">
+                                <use href="#i-books" />
+                            </svg></div>
                         <h3>Трудности в обучении</h3>
                         <p>Помогаем детям преодолеть сложности с чтением, письмом, счётом и усвоением школьной
                             программы.</p>
                     </div>
                     <div class="about__card animate-on-scroll">
-                        <div class="about__card-icon">🤝</div>
+                        <div class="about__card-icon ico"><span class="ico__blob"></span><svg class="ico__svg"
+                                aria-hidden="true">
+                                <use href="#i-people" />
+                            </svg></div>
                         <h3>Сложности в социальной сфере</h3>
                         <p>Развиваем навыки общения, взаимодействия со сверстниками и адаптации в коллективе.</p>
                     </div>
                     <div class="about__card animate-on-scroll">
-                        <div class="about__card-icon">🧠</div>
+                        <div class="about__card-icon ico"><span class="ico__blob"></span><svg class="ico__svg"
+                                aria-hidden="true">
+                                <use href="#i-heart" />
+                            </svg></div>
                         <h3>Нарушение поведения</h3>
                         <p>Работаем с поведенческими трудностями, помогаем формировать саморегуляцию и самоконтроль.</p>
                     </div>
                     <div class="about__card animate-on-scroll">
-                        <div class="about__card-icon">💬</div>
+                        <div class="about__card-icon ico"><span class="ico__blob"></span><svg class="ico__svg"
+                                aria-hidden="true">
+                                <use href="#i-bubble" />
+                            </svg></div>
                         <h3>Речевое развитие</h3>
                         <p>Запуск и развитие речи, формирование фразовой речи, коррекция звукопроизношения и помощь при
                             задержке речевого развития.</p>
                     </div>
                     <div class="about__card animate-on-scroll">
-                        <div class="about__card-icon">🌱</div>
+                        <div class="about__card-icon ico"><span class="ico__blob"></span><svg class="ico__svg"
+                                aria-hidden="true">
+                                <use href="#i-sprout" />
+                            </svg></div>
                         <h3>Индивидуальный подход</h3>
                         <p>Мы учитываем особенности развития каждого ребёнка и выстраиваем работу с опорой на его
                             сильные стороны, актуальные потребности и индивидуальный темп развития.</p>
                     </div>
                     <div class="about__card animate-on-scroll">
-                        <div class="about__card-icon">🧩</div>
+                        <div class="about__card-icon ico"><span class="ico__blob"></span><svg class="ico__svg"
+                                aria-hidden="true">
+                                <use href="#i-puzzle" />
+                            </svg></div>
                         <h3>Поддержка детей с особенностями развития</h3>
                         <p>Помогаем детям с РАС, ЗПР, ЗРР и СДВГ развивать речь, внимание, мышление, навыки общения и
                             самостоятельность. Подбираем программу занятий с учётом индивидуальных особенностей и
@@ -194,7 +326,10 @@
                 <div class="services__grid">
                     <div class="service-card animate-on-scroll">
                         <div class="service-card__badge">Популярное</div>
-                        <div class="service-card__icon">🧠</div>
+                        <div class="service-card__icon ico"><span class="ico__blob"></span><svg class="ico__svg"
+                                aria-hidden="true">
+                                <use href="#i-search" />
+                            </svg></div>
                         <h3 class="service-card__title">Нейропсихологическая диагностика</h3>
                         <p class="service-card__desc">Комплексная оценка внимания, памяти, мышления, восприятия и других
                             познавательных функций для определения актуальных трудностей и составления индивидуальной
@@ -206,7 +341,10 @@
                     </div>
 
                     <div class="service-card animate-on-scroll">
-                        <div class="service-card__icon">📖</div>
+                        <div class="service-card__icon ico"><span class="ico__blob"></span><svg class="ico__svg"
+                                aria-hidden="true">
+                                <use href="#i-book" />
+                            </svg></div>
                         <h3 class="service-card__title">Занятия с дефектологом</h3>
                         <p class="service-card__desc">Индивидуальные коррекционно-развивающие занятия, направленные на
                             развитие познавательной и речевой сферы (в т.ч. запуск речи), формирование необходимых
@@ -218,7 +356,10 @@
                     </div>
 
                     <div class="service-card animate-on-scroll">
-                        <div class="service-card__icon">🗣️</div>
+                        <div class="service-card__icon ico"><span class="ico__blob"></span><svg class="ico__svg"
+                                aria-hidden="true">
+                                <use href="#i-waves" />
+                            </svg></div>
                         <h3 class="service-card__title">Запуск речи</h3>
                         <p class="service-card__desc">Специальная программа для неговорящих детей — от первых звуков до
                             связной речи.</p>
@@ -229,7 +370,10 @@
                     </div>
 
                     <div class="service-card animate-on-scroll">
-                        <div class="service-card__icon">💬</div>
+                        <div class="service-card__icon ico"><span class="ico__blob"></span><svg class="ico__svg"
+                                aria-hidden="true">
+                                <use href="#i-chat" />
+                            </svg></div>
                         <h3 class="service-card__title">Логопед</h3>
                         <p class="service-card__desc">Запуск и развитие речи, постановка и автоматизация звуков,
                             коррекция звукопроизношения, расширение словарного запаса и формирование фразовой речи.</p>
@@ -240,7 +384,10 @@
                     </div>
 
                     <div class="service-card animate-on-scroll">
-                        <div class="service-card__icon">🔄</div>
+                        <div class="service-card__icon ico"><span class="ico__blob"></span><svg class="ico__svg"
+                                aria-hidden="true">
+                                <use href="#i-cycle" />
+                            </svg></div>
                         <h3 class="service-card__title">Нейропсихологическая коррекция</h3>
                         <p class="service-card__desc">Индивидуальные занятия, направленные на развитие внимания, памяти,
                             мышления, саморегуляции, пространственных представлений и других когнитивных функций,
@@ -252,7 +399,10 @@
                     </div>
 
                     <div class="service-card animate-on-scroll">
-                        <div class="service-card__icon">👫</div>
+                        <div class="service-card__icon ico"><span class="ico__blob"></span><svg class="ico__svg"
+                                aria-hidden="true">
+                                <use href="#i-group" />
+                            </svg></div>
                         <h3 class="service-card__title">Групповые занятия</h3>
                         <p class="service-card__desc">Развитие социальных навыков и коммуникации в мини-группах до 4
                             человек.</p>
@@ -278,7 +428,7 @@
                 <div class="specialists__grid">
                     <div class="specialist-card animate-on-scroll">
                         <div class="specialist-card__photo">
-                            <img src="img/team/marina.jpg" alt="Кудряшова Марина Борисовна, нейропсихолог"
+                            <img src="img/team/marina.png" alt="Кудряшова Марина Борисовна, нейропсихолог"
                                 class="specialist-card__image" loading="lazy" width="733" height="1100">
                         </div>
                         <div class="specialist-card__info">
@@ -289,7 +439,7 @@
 
                     <div class="specialist-card animate-on-scroll">
                         <div class="specialist-card__photo">
-                            <img src="img/team/elena.jpg" alt="Атаулова Елена Евгеньевна, дефектолог"
+                            <img src="img/team/elena.png" alt="Атаулова Елена Евгеньевна, дефектолог"
                                 class="specialist-card__image" loading="lazy" width="733" height="1100">
                         </div>
                         <div class="specialist-card__info">
@@ -300,7 +450,7 @@
 
                     <div class="specialist-card animate-on-scroll">
                         <div class="specialist-card__photo">
-                            <img src="img/team/alena.jpg" alt="Сурмина Алёна Юрьевна, логопед"
+                            <img src="img/team/alena.png" alt="Сурмина Алёна Юрьевна, логопед"
                                 class="specialist-card__image" loading="lazy" width="733" height="1100">
                         </div>
                         <div class="specialist-card__info">
@@ -667,7 +817,9 @@
                     <div class="contact__info animate-on-scroll">
                         <div class="contact__info-card">
                             <div class="contact__info-item">
-                                <div class="contact__info-icon">📞</div>
+                                <div class="contact__info-icon"><svg aria-hidden="true">
+                                        <use href="#i-phone" />
+                                    </svg></div>
                                 <div>
                                     <span class="contact__info-label">Телефон</span>
                                     <a href="tel:+79502702967" class="contact__info-value">8 950 270 29 67</a>
@@ -675,7 +827,9 @@
                             </div>
 
                             <div class="contact__info-item">
-                                <div class="contact__info-icon">📍</div>
+                                <div class="contact__info-icon"><svg aria-hidden="true">
+                                        <use href="#i-pin" />
+                                    </svg></div>
                                 <div>
                                     <span class="contact__info-label">Адрес</span>
                                     <span class="contact__info-value">ул. Юрия Двужильного, 10</span>
@@ -683,7 +837,9 @@
                             </div>
 
                             <div class="contact__info-item">
-                                <div class="contact__info-icon">🕐</div>
+                                <div class="contact__info-icon"><svg aria-hidden="true">
+                                        <use href="#i-clock" />
+                                    </svg></div>
                                 <div>
                                     <span class="contact__info-label">Время работы</span>
                                     <span class="contact__info-value">Пн–Сб: 9:00 – 19:00</span>
