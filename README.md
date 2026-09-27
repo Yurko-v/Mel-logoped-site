@@ -1,136 +1,178 @@
-# 🌿 Мел — Детский центр развития
+<div align="center">
 
-Сайт детского центра развития **«Мел»** (г. Кемерово).  
-Нейропсихолог · Дефектолог · Логопед
+# 🌿 Мел — детский центр развития
 
-> *Дорога в будущее*
+**Нейропсихолог · Дефектолог · Логопед** — Кемерово
+
+*Дорога в будущее*
+
+### [🌐 meldoroga.ru](https://meldoroga.ru)
 
 ![HTML](https://img.shields.io/badge/HTML5-E34F26?style=flat&logo=html5&logoColor=white)
 ![CSS](https://img.shields.io/badge/CSS3-1572B6?style=flat&logo=css3&logoColor=white)
 ![JS](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat&logo=javascript&logoColor=black)
+![Python](https://img.shields.io/badge/Python-3776AB?style=flat&logo=python&logoColor=white)
+![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=flat&logo=fastapi&logoColor=white)
+[![Deploy](https://github.com/Yurko-v/Mel-logoped-site/actions/workflows/deploy-beget.yml/badge.svg)](https://github.com/Yurko-v/Mel-logoped-site/actions/workflows/deploy-beget.yml)
+
+</div>
 
 ---
 
-## 📋 О проекте
+## О проекте
 
-Лендинг-сайт для детского центра развития «Мел», специализирующегося на помощи детям с особенностями развития, речевыми нарушениями, РАС, ЗПР, СДВГ.
+Сайт-визитка центра «Мел», который помогает детям с речевыми нарушениями и особенностями развития (РАС, ЗПР, ЗРР, СДВГ). Главная задача страницы — рассказать о центре и привести родителей к записи на консультацию: заявка с формы сразу приходит в Telegram.
 
-### Разделы сайта
+Визуальная идея — **меловая доска**: главный экран нарисован мелом, по нему идёт пунктирная «дорога в будущее», вдоль неё к доске прикреплены фотографии с занятий. Та же доска встречает на странице 404 — там на ней можно порисовать.
 
-- **Главный экран** — название, слоган, кнопки записи
-- **О центре** — направления помощи (6 карточек)
-- **Услуги** — нейропсихологическая диагностика, дефектолог, запуск речи, логопед, нейропсихологическая коррекция, групповые занятия
-- **Специалисты** — карточки команды
-- **Отзывы** — отзывы родителей
-- **Галерея** — мозаика фотографий (плитки трёх форм, без пустот) с полноэкранным просмотром
-- **FAQ** — аккордеон с частыми вопросами
-- **Контакты** — форма записи + карта + контактная информация
+### Разделы страницы
 
-### Возможности
+| Раздел | Что внутри |
+|---|---|
+| Главный экран | Название, слоган, кнопки записи, фото-«полароиды» на доске |
+| О центре | Текст с фотоколлажем и 6 направлений помощи |
+| Услуги | Диагностика, дефектолог, запуск речи, логопед, нейрокоррекция, группы |
+| Специалисты | Портреты и специализации команды |
+| Отзывы | Реальные отзывы родителей из 2ГИС |
+| Галерея | Мозаика из 17 фото с полноэкранным просмотром |
+| FAQ | Частые вопросы (аккордеон) |
+| Контакты | Форма записи, телефон, адрес, карта |
 
-- ✅ Полностью адаптивный дизайн (мобильные, планшеты, десктоп)
-- ✅ Мобильное меню-бургер с оверлеем
-- ✅ Анимации при скролле (IntersectionObserver)
-- ✅ FAQ-аккордеон
-- ✅ Отправка заявок в Telegram-бот
-- ✅ Форматирование телефона (+7)
-- ✅ Плавный скролл к секциям
+### Что умеет
+
+- Адаптивная вёрстка: телефон, планшет, десктоп
+- Галерея-мозаика без пустот, просмотр фото стрелками, клавиатурой и свайпом
+- Анимации появления при прокрутке, учитывается системная настройка «меньше движения»
+- Отправка заявок в Telegram, маска телефона `+7`, валидация на сервере
+- Меловая страница 404 с рисованием
 
 ---
 
-## 🚀 Запуск
+## Быстрый старт
 
-Сайт и бэкенд теперь — одно FastAPI-приложение: при старте сервер склеивает `index.html` + `style.css` + `script.js` в один HTML и сам его раздаёт, плюс обрабатывает `/api/contact`. Один процесс — весь сайт. Любой неизвестный адрес (кроме `/api/*`, где остаётся JSON) отдаёт страницу [404.html](404.html) со статусом 404.
+Сайт и бэкенд — одно FastAPI-приложение. При старте сервер склеивает `index.html` + `style.css` + `script.js` в один HTML, раздаёт его, отдаёт фото из `img/` и принимает заявки на `/api/contact`.
 
 ```bash
 cd backend
 python -m venv venv
-venv\Scripts\activate       # Windows
-# source venv/bin/activate  # macOS/Linux
+venv\Scripts\activate          # Windows
+# source venv/bin/activate     # macOS / Linux
 pip install -r requirements.txt
-copy .env.example .env      # Windows; на macOS/Linux: cp .env.example .env
+copy .env.example .env         # macOS / Linux: cp .env.example .env
 python app.py
 ```
 
-Открой **http://localhost:5000/** — увидишь сайт целиком. Правки в `index.html`/`style.css`/`script.js` подхватятся после перезапуска сервера (сборка происходит один раз при старте).
+Сайт откроется на **http://localhost:5000/**, документация API — на `/docs`.
 
-> Открывать `index.html` напрямую двойным кликом больше не нужно для проверки — этот вариант всё ещё технически работает (тогда используется отдельный [config.js](config.js)), но для локальной разработки удобнее через `python app.py`.
-
----
-
-## ⚙️ Настройка Telegram-бота
-
-Заявки с формы принимает [backend/app.py](backend/app.py) — валидирует и пересылает их в Telegram через Bot API.
-
-Заполните `backend/.env` (создаётся из `backend/.env.example`):
-
-1. Создайте бота через [@BotFather](https://t.me/BotFather) в Telegram, получите `TELEGRAM_BOT_TOKEN`
-2. Узнайте `TELEGRAM_CHAT_ID` (например, через [@userinfobot](https://t.me/userinfobot) или API `getUpdates`)
-3. `ALLOWED_ORIGIN` — нужен, только если сайт и бэкенд разнесены по разным доменам; при единой раздаче через FastAPI можно оставить `*`
-
-Автодокументация API (Swagger UI) — `http://localhost:5000/docs`.
-
-> ⚠️ Файл `backend/.env` добавлен в `.gitignore` и не попадает в репозиторий.
+> Сборка страницы происходит один раз при запуске, поэтому после правок в `index.html`, `style.css` или `script.js` сервер нужно перезапустить.
 
 ---
 
-## 🌍 Продакшен (Beget)
+## Как всё устроено
 
-Сайт живёт на shared-хостинге Beget (домен `meldoroga.ru`, docroot `~/meldoroga.ru/public_html/`) под управлением Phusion Passenger (там нет отдельного UI для Python-приложений — задействован общий Docker-контейнер тарифа, доступный по SSH). Ключевые файлы на сервере (не в репозитории, создаются один раз вручную):
+- **Страница** — чистые HTML/CSS/JS без фреймворков и сборщиков.
+- **Сервер** ([backend/app.py](backend/app.py)) встраивает CSS и JS прямо в HTML (ссылки с `?v=…` тоже распознаются), поэтому браузер получает страницу одним запросом.
+- **Статика** отдаётся точечно: иконка, логотипы и папка `img/`. Остальные файлы репозитория (в том числе `backend/.env`) снаружи недоступны.
+- **404**: любой неизвестный адрес отдаёт [404.html](404.html), кроме `/api/*` — там ответ в JSON.
 
-- `~/meldoroga.ru/public_html/.htaccess` — `PassengerEnabled On` + путь до `venv/bin/python3`
-- `~/meldoroga.ru/public_html/passenger_wsgi.py` — добавляет `../mel-site/backend` в `sys.path` и оборачивает FastAPI через `a2wsgi.ASGIMiddleware`
-- `~/meldoroga.ru/venv/` — виртуальное окружение с зависимостями (создано и заполнено **внутри контейнера**, `ssh localhost -p222` — снаружи контейнера пакеты для Passenger не видны)
-- `~/meldoroga.ru/mel-site/` — git-клон этого репозитория
-- `~/meldoroga.ru/mel-site/backend/.env` — секреты Telegram на сервере
+### Фотографии
 
-Клон репозитория и `venv` лежат **выше** docroot (`public_html`), чтобы Apache не отдавал наружу `backend/.env` и прочие исходники: сайт целиком раздаёт само приложение, статика в docroot не нужна.
+Все фото лежат в `img/`, уменьшены и очищены от EXIF (в нём бывает геолокация):
 
-При пуше в `main` workflow [deploy-beget.yml](.github/workflows/deploy-beget.yml) сам заходит по SSH и обновляет код:
+| Папка | Для чего |
+|---|---|
+| `img/gallery/` | Галерея: `NN.jpg` — полный размер для просмотра, `NN-sm.jpg` — превью для мозаики |
+| `img/team/` | Портреты специалистов |
+| `img/moments/` | Кадры для главного экрана и блока «О центре» |
+
+Плитки галереи бывают трёх форм (`--big`, `--tall`, `--wide`) и подобраны так, чтобы сетка заполнялась без дыр. При замене фото сохраняйте формы и порядок плиток в `index.html`. Исходники фотографий складываются в `photos/`, эта папка в git не попадает.
+
+---
+
+## Заявки в Telegram
+
+Сервер проверяет данные формы и пересылает их через Telegram Bot API. Настройки лежат в `backend/.env` (шаблон — `backend/.env.example`):
+
+| Переменная | Откуда взять |
+|---|---|
+| `TELEGRAM_BOT_TOKEN` | Создать бота у [@BotFather](https://t.me/BotFather) |
+| `TELEGRAM_CHAT_ID` | Через [@userinfobot](https://t.me/userinfobot) или метод `getUpdates` |
+| `ALLOWED_ORIGIN` | Нужен, только если сайт и API на разных доменах; иначе `*` |
+
+Проверить, что бот настроен: `GET /api/health` → `telegram_configured: true`.
+
+> ⚠️ `backend/.env` в `.gitignore` и в репозиторий не попадает.
+
+---
+
+## Деплой
+
+Продакшен — **[meldoroga.ru](https://meldoroga.ru)** на shared-хостинге Beget под Phusion Passenger.
+
+**Автоматически:** при пуше в `main` workflow [deploy-beget.yml](.github/workflows/deploy-beget.yml) заходит на сервер по SSH, обновляет код и перезапускает приложение:
 
 ```bash
 cd ~/meldoroga.ru/mel-site && git reset --hard origin/main
-touch ~/meldoroga.ru/public_html/tmp/restart.txt   # перезапуск Passenger
+touch ~/meldoroga.ru/public_html/tmp/restart.txt
 ```
 
-Секреты репозитория для деплоя: `BEGET_HOST`, `BEGET_USER`, `BEGET_SSH_KEY` (приватный SSH-ключ, base64 — сырой multiline-текст ломается при вставке в поле GitHub).
+Секреты репозитория: `BEGET_HOST`, `BEGET_USER`, `BEGET_SSH_KEY` (приватный ключ в base64: многострочный текст ломается при вставке в поле GitHub).
 
-Если менялся `backend/requirements.txt` — автодеплой это не подхватит, нужно вручную зайти в контейнер (`ssh localhost -p222`) и выполнить `venv/bin/pip install -r ~/meldoroga.ru/mel-site/backend/requirements.txt`.
-
----
-
-## 📁 Структура проекта
+**Раскладка на сервере** (создаётся один раз вручную):
 
 ```
-├── index.html            # Основная страница
-├── 404.html              # Страница «не найдено» (меловая доска, можно порисовать)
-├── style.css             # Стили (адаптив, анимации, компоненты)
-├── script.js             # Логика (меню, FAQ, форма, запрос к бэкенду)
-├── config.js             # URL бэкенда (API_URL)
-├── logo.svg              # Логотип
-├── favicon.ico           # Иконка вкладки
-├── img/                  # Фото: gallery/ (NN.jpg + NN-sm.jpg превью), team/ (портреты), moments/ (кадры для главного экрана и «О нас»)
-├── backend/              # Python (FastAPI) бэкенд для приёма заявок
-│   ├── app.py            # Раздаёт сайт и 404-страницу (склейка HTML+CSS+JS) + POST /api/contact → Telegram
-│   ├── passenger_wsgi.py # Точка входа для Passenger-хостингов (WSGI-обёртка над FastAPI)
-│   ├── requirements.txt  # Зависимости
-│   └── .env.example      # Шаблон секретов (токен бота, chat id)
-└── .gitignore            # Исключения из Git
+~/meldoroga.ru/
+├── public_html/              # docroot — только точка входа, без исходников
+│   ├── .htaccess             # PassengerEnabled On + путь до venv/bin/python3
+│   └── passenger_wsgi.py     # добавляет ../mel-site/backend в sys.path, оборачивает FastAPI через a2wsgi
+├── mel-site/                 # git-клон репозитория
+│   └── backend/.env          # секреты Telegram
+└── venv/                     # зависимости
+```
+
+Клон и `venv` лежат **выше** `public_html`, чтобы Apache не мог отдать наружу исходники и `.env`: весь сайт раздаёт само приложение.
+
+**Если изменился `backend/requirements.txt`**, автодеплой это не подхватит. Зайдите в контейнер (`ssh localhost -p222`; снаружи контейнера пакеты для Passenger не видны) и выполните:
+
+```bash
+venv/bin/pip install -r ~/meldoroga.ru/mel-site/backend/requirements.txt
 ```
 
 ---
 
-## 🛠 Технологии
+## Структура проекта
 
-- **HTML5** — семантическая разметка
-- **CSS3** — CSS-переменные, Flexbox, Grid, медиа-запросы, анимации
-- **JavaScript** — ванильный JS, IntersectionObserver, Fetch API
-- **Шрифты** — [Inter](https://fonts.google.com/specimen/Inter), [Cormorant Garamond](https://fonts.google.com/specimen/Cormorant+Garamond), [Unbounded](https://fonts.google.com/specimen/Unbounded)
-- **Python / FastAPI** — раздача сайта одним HTML-файлом + приём заявок ([backend/app.py](backend/app.py))
-- **Telegram Bot API** — отправка заявок
+```
+├── index.html              # Главная страница
+├── 404.html                # Страница «не найдено» (меловая доска)
+├── style.css               # Стили
+├── script.js               # Меню, анимации, FAQ, галерея, форма
+├── config.js               # URL API, если открывать index.html без сервера
+├── logo.svg, logo_footer.svg, favicon.ico
+├── img/                    # Фотографии (см. «Фотографии»)
+├── backend/
+│   ├── app.py              # FastAPI: сборка страницы, статика, /api/contact
+│   ├── passenger_wsgi.py   # Точка входа для Passenger
+│   ├── requirements.txt
+│   └── .env.example        # Шаблон секретов
+└── .github/workflows/
+    └── deploy-beget.yml    # Автодеплой на Beget
+```
 
 ---
 
-## 📄 Лицензия
+## Технологии
+
+- **HTML5, CSS3** — CSS-переменные, Grid, Flexbox, медиа-запросы, анимации
+- **JavaScript** — ванильный, IntersectionObserver, Fetch API
+- **Python, FastAPI** — раздача сайта и приём заявок; `a2wsgi` для Passenger
+- **Telegram Bot API** — доставка заявок
+- **Шрифты** — [Unbounded](https://fonts.google.com/specimen/Unbounded), [Cormorant Garamond](https://fonts.google.com/specimen/Cormorant+Garamond), [Inter](https://fonts.google.com/specimen/Inter), [Caveat](https://fonts.google.com/specimen/Caveat)
+
+---
+
+<div align="center">
 
 © 2026 Детский центр развития «Мел». Все права защищены.
+
+</div>
