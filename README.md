@@ -22,7 +22,7 @@
 - **Услуги** — нейропсихологическая диагностика, дефектолог, запуск речи, логопед, нейропсихологическая коррекция, групповые занятия
 - **Специалисты** — карточки команды
 - **Отзывы** — отзывы родителей
-- **Галерея** — слайдер с фотографиями
+- **Галерея** — мозаика фотографий (плитки трёх форм, без пустот) с полноэкранным просмотром
 - **FAQ** — аккордеон с частыми вопросами
 - **Контакты** — форма записи + карта + контактная информация
 
@@ -76,24 +76,26 @@ python app.py
 
 ## 🌍 Продакшен (Beget)
 
-Сайт живёт на shared-хостинге Beget под управлением Phusion Passenger (там нет отдельного UI для Python-приложений — задействован общий Docker-контейнер тарифа, доступный по SSH). Ключевые файлы на сервере (не в репозитории, создаются один раз вручную):
+Сайт живёт на shared-хостинге Beget (домен `meldoroga.ru`, docroot `~/meldoroga.ru/public_html/`) под управлением Phusion Passenger (там нет отдельного UI для Python-приложений — задействован общий Docker-контейнер тарифа, доступный по SSH). Ключевые файлы на сервере (не в репозитории, создаются один раз вручную):
 
-- `~/uravelik.beget.tech/.htaccess` — `PassengerEnabled On` + путь до `venv/bin/python3`
-- `~/uravelik.beget.tech/passenger_wsgi.py` — добавляет `mel-site/backend` в `sys.path` и оборачивает FastAPI через `a2wsgi.ASGIMiddleware`
-- `~/uravelik.beget.tech/venv/` — виртуальное окружение с зависимостями (создано и заполнено **внутри контейнера**, `ssh localhost -p222` — снаружи контейнера пакеты для Passenger не видны)
-- `~/uravelik.beget.tech/mel-site/` — git-клон этого репозитория
-- `~/uravelik.beget.tech/mel-site/backend/.env` — секреты Telegram на сервере
+- `~/meldoroga.ru/public_html/.htaccess` — `PassengerEnabled On` + путь до `venv/bin/python3`
+- `~/meldoroga.ru/public_html/passenger_wsgi.py` — добавляет `../mel-site/backend` в `sys.path` и оборачивает FastAPI через `a2wsgi.ASGIMiddleware`
+- `~/meldoroga.ru/venv/` — виртуальное окружение с зависимостями (создано и заполнено **внутри контейнера**, `ssh localhost -p222` — снаружи контейнера пакеты для Passenger не видны)
+- `~/meldoroga.ru/mel-site/` — git-клон этого репозитория
+- `~/meldoroga.ru/mel-site/backend/.env` — секреты Telegram на сервере
+
+Клон репозитория и `venv` лежат **выше** docroot (`public_html`), чтобы Apache не отдавал наружу `backend/.env` и прочие исходники: сайт целиком раздаёт само приложение, статика в docroot не нужна.
 
 При пуше в `main` workflow [deploy-beget.yml](.github/workflows/deploy-beget.yml) сам заходит по SSH и обновляет код:
 
 ```bash
-cd ~/uravelik.beget.tech/mel-site && git reset --hard origin/main
-touch ~/uravelik.beget.tech/tmp/restart.txt   # перезапуск Passenger
+cd ~/meldoroga.ru/mel-site && git reset --hard origin/main
+touch ~/meldoroga.ru/public_html/tmp/restart.txt   # перезапуск Passenger
 ```
 
 Секреты репозитория для деплоя: `BEGET_HOST`, `BEGET_USER`, `BEGET_SSH_KEY` (приватный SSH-ключ, base64 — сырой multiline-текст ломается при вставке в поле GitHub).
 
-Если менялся `backend/requirements.txt` — автодеплой это не подхватит, нужно вручную зайти в контейнер (`ssh localhost -p222`) и выполнить `venv/bin/pip install -r ~/uravelik.beget.tech/mel-site/backend/requirements.txt`.
+Если менялся `backend/requirements.txt` — автодеплой это не подхватит, нужно вручную зайти в контейнер (`ssh localhost -p222`) и выполнить `venv/bin/pip install -r ~/meldoroga.ru/mel-site/backend/requirements.txt`.
 
 ---
 
@@ -107,7 +109,7 @@ touch ~/uravelik.beget.tech/tmp/restart.txt   # перезапуск Passenger
 ├── config.js             # URL бэкенда (API_URL)
 ├── logo.svg              # Логотип
 ├── favicon.ico           # Иконка вкладки
-├── 1.png, 2.png          # Фотографии галереи
+├── img/                  # Фото: gallery/ (NN.jpg + NN-sm.jpg превью), team/ (портреты), moments/ (кадры для главного экрана и «О нас»)
 ├── backend/              # Python (FastAPI) бэкенд для приёма заявок
 │   ├── app.py            # Раздаёт сайт и 404-страницу (склейка HTML+CSS+JS) + POST /api/contact → Telegram
 │   ├── passenger_wsgi.py # Точка входа для Passenger-хостингов (WSGI-обёртка над FastAPI)

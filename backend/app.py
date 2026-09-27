@@ -11,6 +11,7 @@ from fastapi import FastAPI, HTTPException, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, HTMLResponse, JSONResponse
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, field_validator
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
@@ -75,12 +76,14 @@ STATIC_ASSETS = {
     "/favicon.ico": SITE_DIR / "favicon.ico",
     "/logo.svg": SITE_DIR / "logo.svg",
     "/logo_footer.svg": SITE_DIR / "logo_footer.svg",
-    "/1.png": SITE_DIR / "1.png",
-    "/2.png": SITE_DIR / "2.png",
 }
 
 for route_path, file_path in STATIC_ASSETS.items():
     app.get(route_path, include_in_schema=False)(lambda fp=file_path: FileResponse(fp))
+
+# Фотографии (галерея, специалисты) — отдельная папка img/, в ней нет ничего секретного,
+# поэтому её можно смонтировать целиком. StaticFiles сам не выпускает за пределы папки.
+app.mount("/img", StaticFiles(directory=SITE_DIR / "img"), name="img")
 
 
 @app.get("/", response_class=HTMLResponse, include_in_schema=False)

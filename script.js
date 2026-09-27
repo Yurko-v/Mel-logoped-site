@@ -201,127 +201,100 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // ── Gallery Slider ──
-    const gallerySlider = document.querySelector('.gallery__slider');
+    // ── Gallery ──
+    const gallerySection = document.getElementById('gallery');
 
-    if (gallerySlider) {
-        const track = gallerySlider.querySelector('.gallery__track');
-        const slides = Array.from(gallerySlider.querySelectorAll('.gallery__slide'));
-        const prevBtn = gallerySlider.querySelector('.gallery__prev');
-        const nextBtn = gallerySlider.querySelector('.gallery__next');
-        const dotsContainer = gallerySlider.querySelector('.gallery__dots');
+    if (gallerySection) {
+        const items = Array.from(gallerySection.querySelectorAll('.gallery__item'));
+        const moreBtn = gallerySection.querySelector('.gallery__more-btn');
         let currentIndex = 0;
-        let autoplayTimer = null;
 
-        slides.forEach((_, i) => {
-            const dot = document.createElement('button');
-            dot.className = 'gallery__dot';
-            dot.setAttribute('aria-label', `Перейти к фото ${i + 1}`);
-            dot.addEventListener('click', () => {
-                goToSlide(i);
-                restartAutoplay();
-            });
-            dotsContainer.appendChild(dot);
-        });
-        const dots = Array.from(dotsContainer.querySelectorAll('.gallery__dot'));
-
-        const updateSlider = () => {
-            track.style.transform = `translateX(-${currentIndex * 100}%)`;
-            dots.forEach((dot, i) => dot.classList.toggle('gallery__dot--active', i === currentIndex));
-        };
-
-        const goToSlide = (index) => {
-            currentIndex = (index + slides.length) % slides.length;
-            updateSlider();
-        };
-
-        const nextSlide = () => goToSlide(currentIndex + 1);
-        const prevSlide = () => goToSlide(currentIndex - 1);
-
-        const stopAutoplay = () => {
-            if (autoplayTimer) clearInterval(autoplayTimer);
-        };
-
-        const startAutoplay = () => {
-            stopAutoplay();
-            if (slides.length > 1) autoplayTimer = setInterval(nextSlide, 5000);
-        };
-
-        const restartAutoplay = () => startAutoplay();
-
-        prevBtn.addEventListener('click', () => { prevSlide(); restartAutoplay(); });
-        nextBtn.addEventListener('click', () => { nextSlide(); restartAutoplay(); });
-
-        gallerySlider.addEventListener('mouseenter', stopAutoplay);
-        gallerySlider.addEventListener('mouseleave', startAutoplay);
-        gallerySlider.addEventListener('focusin', stopAutoplay);
-        gallerySlider.addEventListener('focusout', startAutoplay);
-
-        // Touch swipe
-        let touchStartX = 0;
-        let touchStartY = 0;
-
-        track.addEventListener('touchstart', (e) => {
-            touchStartX = e.touches[0].clientX;
-            touchStartY = e.touches[0].clientY;
-        }, { passive: true });
-
-        track.addEventListener('touchend', (e) => {
-            const dx = e.changedTouches[0].clientX - touchStartX;
-            const dy = e.changedTouches[0].clientY - touchStartY;
-            if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) {
-                dx < 0 ? nextSlide() : prevSlide();
-                restartAutoplay();
-            }
-        }, { passive: true });
-
-        // Keyboard navigation
-        gallerySlider.setAttribute('tabindex', '0');
-        gallerySlider.addEventListener('keydown', (e) => {
-            if (e.key === 'ArrowLeft') { prevSlide(); restartAutoplay(); }
-            if (e.key === 'ArrowRight') { nextSlide(); restartAutoplay(); }
-        });
+        if (moreBtn) {
+            moreBtn.addEventListener('click', () => gallerySection.classList.add('gallery--expanded'));
+        }
 
         // Lightbox
         const lightbox = document.createElement('div');
         lightbox.className = 'gallery__lightbox';
+        lightbox.setAttribute('role', 'dialog');
+        lightbox.setAttribute('aria-modal', 'true');
+        lightbox.setAttribute('aria-label', 'Просмотр фотографии');
         lightbox.innerHTML = `
             <button class="gallery__lightbox-close" aria-label="Закрыть">&times;</button>
+            <button class="gallery__lightbox-prev" aria-label="Предыдущее фото">&#10094;</button>
             <img class="gallery__lightbox-image" src="" alt="">
+            <button class="gallery__lightbox-next" aria-label="Следующее фото">&#10095;</button>
+            <div class="gallery__lightbox-counter" aria-live="polite"></div>
         `;
         document.body.appendChild(lightbox);
         const lightboxImage = lightbox.querySelector('.gallery__lightbox-image');
         const lightboxClose = lightbox.querySelector('.gallery__lightbox-close');
+        const lightboxPrev = lightbox.querySelector('.gallery__lightbox-prev');
+        const lightboxNext = lightbox.querySelector('.gallery__lightbox-next');
+        const lightboxCounter = lightbox.querySelector('.gallery__lightbox-counter');
 
-        const openLightbox = () => {
-            const img = slides[currentIndex].querySelector('.gallery__image');
-            lightboxImage.src = img.src;
-            lightboxImage.alt = img.alt;
+        const showPhoto = (index) => {
+            currentIndex = (index + items.length) % items.length;
+            const item = items[currentIndex];
+            const thumb = item.querySelector('.gallery__image');
+            lightboxImage.src = item.href;
+            lightboxImage.alt = thumb.alt;
+            lightboxCounter.textContent = `${currentIndex + 1} / ${items.length}`;
+            // Соседние кадры подгружаем заранее, чтобы листание не мигало
+            [currentIndex - 1, currentIndex + 1].forEach(i => {
+                new Image().src = items[(i + items.length) % items.length].href;
+            });
+        };
+
+        const openLightbox = (index) => {
+            showPhoto(index);
             lightbox.classList.add('active');
             document.body.style.overflow = 'hidden';
-            stopAutoplay();
+            lightboxClose.focus();
         };
 
         const closeLightbox = () => {
             lightbox.classList.remove('active');
             document.body.style.overflow = '';
-            startAutoplay();
+            items[currentIndex].focus();
         };
 
-        slides.forEach(slide => {
-            slide.querySelector('.gallery__image').addEventListener('click', openLightbox);
+        items.forEach((item, i) => {
+            item.addEventListener('click', (e) => {
+                e.preventDefault();
+                openLightbox(i);
+            });
         });
 
         lightboxClose.addEventListener('click', closeLightbox);
+        lightboxPrev.addEventListener('click', () => showPhoto(currentIndex - 1));
+        lightboxNext.addEventListener('click', () => showPhoto(currentIndex + 1));
         lightbox.addEventListener('click', (e) => {
             if (e.target === lightbox) closeLightbox();
         });
         document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && lightbox.classList.contains('active')) closeLightbox();
+            if (!lightbox.classList.contains('active')) return;
+            if (e.key === 'Escape') closeLightbox();
+            if (e.key === 'ArrowLeft') showPhoto(currentIndex - 1);
+            if (e.key === 'ArrowRight') showPhoto(currentIndex + 1);
         });
 
-        updateSlider();
-        startAutoplay();
+        // Touch swipe
+        let touchStartX = 0;
+        let touchStartY = 0;
+
+        lightbox.addEventListener('touchstart', (e) => {
+            touchStartX = e.touches[0].clientX;
+            touchStartY = e.touches[0].clientY;
+        }, { passive: true });
+
+        lightbox.addEventListener('touchend', (e) => {
+            const dx = e.changedTouches[0].clientX - touchStartX;
+            const dy = e.changedTouches[0].clientY - touchStartY;
+            if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) {
+                showPhoto(dx < 0 ? currentIndex + 1 : currentIndex - 1);
+            }
+        }, { passive: true });
     }
 
     // ── Phone input formatting ──
