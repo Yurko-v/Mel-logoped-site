@@ -1337,110 +1337,276 @@ ul {
 }
 
 /* ═══════════════════════════════
-   CONTACT SECTION
+   ДОРОГА К ПЕРВОЙ ВСТРЕЧЕ
+   Финальная меловая доска: пунктирная дорога
+   через четыре шага, в конце — телефон и карта.
    ═══════════════════════════════ */
-.contact__grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 60px;
-    align-items: start;
+.path {
+    position: relative;
+    overflow: hidden;
+    padding: var(--s-section) 0 calc(var(--s-section) + 28px);
+    background: radial-gradient(130% 92% at 50% 0%, var(--c-board-edge) 0%, var(--c-board) 44%, var(--c-board-deep) 100%);
+    color: var(--c-chalk);
 }
 
-.contact-form {
-    background: var(--c-cream);
-    border-radius: var(--r-card);
-    padding: 44px 40px;
-    border: 1px solid var(--c-border);
+/* та же меловая пыль, что и на главном экране */
+.path::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+    opacity: 0.05;
+    mix-blend-mode: screen;
+    pointer-events: none;
 }
 
-.contact-form__field {
-    margin-bottom: 20px;
+.path .container {
+    position: relative;
+    z-index: 2;
 }
 
-.contact-form__field label {
-    display: block;
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--c-forest);
-    margin-bottom: 8px;
-    letter-spacing: 0.02em;
+.path .section__label {
+    color: var(--c-chalk-sun);
 }
 
-.contact-form__field input,
-.contact-form__field textarea {
+.path .section__label::before {
+    background: var(--c-chalk-sun);
+}
+
+.path .section__title {
+    color: var(--c-chalk);
+}
+
+.path .section__desc {
+    color: var(--c-chalk-soft);
+}
+
+/* ── Дорога ── */
+.path__road {
+    --track-h: 120px;
+    position: relative;
+}
+
+.path__track {
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
-    padding: 14px 18px;
-    border: 1.5px solid rgba(45, 90, 61, 0.12);
-    border-radius: var(--r-sm);
-    background: var(--c-white);
-    font-family: var(--f-body);
-    font-size: 15px;
-    color: var(--c-text);
-    transition: border-color var(--t-fast), box-shadow var(--t-fast);
-    outline: none;
+    height: var(--track-h);
+    overflow: visible;
+    /* дорога «прорисовывается» слева направо, когда блок попадает в экран */
+    clip-path: inset(0 100% 0 0);
+    transition: clip-path 1.8s var(--e-soft, ease) 0.2s;
 }
 
-.contact-form__field input::placeholder,
-.contact-form__field textarea::placeholder {
-    color: var(--c-text-muted);
+.path__road.visible .path__track {
+    clip-path: inset(0 0 0 0);
 }
 
-.contact-form__field input:focus,
-.contact-form__field textarea:focus {
-    border-color: var(--c-sage);
-    box-shadow: 0 0 0 4px rgba(123, 168, 135, 0.12);
+.path__track path {
+    fill: none;
+    stroke: var(--c-chalk-soft);
+    stroke-width: 3.5;
+    stroke-linecap: round;
+    stroke-dasharray: 3 16;
+    vector-effect: non-scaling-stroke;
+    filter: url(#chalk);
 }
 
-.contact-form__field textarea {
-    resize: vertical;
-    min-height: 100px;
+.path__goal {
+    position: absolute;
+    top: -30px;
+    right: -6px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    font-family: var(--f-hand);
+    font-size: 26px;
+    line-height: 1;
+    color: var(--c-chalk-sun);
+    filter: url(#chalk);
+    opacity: 0;
+    transform: scale(0.6) rotate(-20deg);
+    transition: opacity 0.6s var(--e-out, ease) 1.9s, transform 0.8s var(--e-out, ease) 1.9s;
 }
 
-.contact-form__note {
-    font-size: 12px;
-    color: var(--c-text-muted);
+.path__goal svg {
+    order: 2;
+    width: 34px;
+    height: 34px;
+    fill: var(--c-chalk-sun);
+}
+
+.path__road.visible .path__goal {
+    opacity: 1;
+    transform: none;
+}
+
+.path__stops {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+}
+
+.path__stop {
+    --ink: var(--c-chalk-sun);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 18px;
     text-align: center;
-    margin-top: 12px;
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity 0.7s var(--e-out, ease), transform 0.7s var(--e-out, ease);
 }
 
-/* Contact Info */
-.contact__info {
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
+.path__stop:nth-child(2) {
+    --ink: var(--c-chalk-sky);
 }
 
-.contact__info-card {
-    background: var(--c-cream);
-    border-radius: var(--r-card);
-    padding: 36px 32px;
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
-    border: 1px solid var(--c-border);
+.path__stop:nth-child(3) {
+    --ink: var(--c-peach);
 }
 
-.contact__info-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 16px;
+.path__stop:nth-child(4) {
+    --ink: var(--c-sage-light);
 }
 
-.contact__info-icon {
-    color: var(--c-forest);
-    flex-shrink: 0;
-    width: 48px;
-    height: 48px;
-    background: rgba(123, 168, 135, 0.1);
-    border-radius: 14px;
+/* шаги загораются вслед за меловой линией */
+.path__road.visible .path__stop {
+    opacity: 1;
+    transform: none;
+}
+
+.path__road.visible .path__stop:nth-child(1) {
+    transition-delay: 0.35s;
+}
+
+.path__road.visible .path__stop:nth-child(2) {
+    transition-delay: 0.75s;
+}
+
+.path__road.visible .path__stop:nth-child(3) {
+    transition-delay: 1.15s;
+}
+
+.path__road.visible .path__stop:nth-child(4) {
+    transition-delay: 1.55s;
+}
+
+/* Номер в кружке, обведённом мелом от руки (дважды, как на доске) */
+.path__num {
+    position: relative;
+    width: 72px;
+    height: 72px;
+    margin-top: calc(var(--track-h) / 2 - 36px);
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: var(--c-board);
+    font-family: var(--f-hand);
+    font-size: 42px;
+    font-weight: 700;
+    line-height: 1;
+    color: var(--ink);
+    filter: url(#chalk);
+    transition: transform 0.6s var(--e-out, ease);
+}
+
+.path__num::before,
+.path__num::after {
+    content: '';
+    position: absolute;
+    inset: -3px;
+    border: 2.5px solid var(--ink);
+    border-radius: 56% 44% 52% 48% / 47% 55% 45% 53%;
+    transform: rotate(-8deg);
+}
+
+.path__num::after {
+    inset: -6px -2px -1px -5px;
+    border-width: 1.5px;
+    border-radius: 44% 56% 47% 53% / 55% 46% 54% 45%;
+    opacity: 0.5;
+    transform: rotate(14deg);
+}
+
+.path__stop:hover .path__num {
+    transform: rotate(-6deg) scale(1.08);
+}
+
+.path__title {
+    margin: 22px 0 8px;
+    font-family: var(--f-hand);
+    font-size: 32px;
+    font-weight: 600;
+    line-height: 1.1;
+    color: var(--ink);
+    filter: url(#chalk);
+}
+
+.path__text {
+    font-size: 15px;
+    line-height: 1.65;
+    color: var(--c-chalk-soft);
+}
+
+/* ── Финиш: телефон и карта ── */
+.path__finish {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: 72px;
+    align-items: center;
+    margin-top: 104px;
+    padding-top: 72px;
+    border-top: 2px dashed var(--c-chalk-faint);
+}
+
+.path__call-lead {
+    font-family: var(--f-hand);
+    font-size: clamp(28px, 3.2vw, 38px);
+    line-height: 1.15;
+    color: var(--c-chalk-sky);
+    filter: url(#chalk);
+}
+
+.path__phone {
+    display: inline-block;
+    margin: 10px 0 26px;
+    font-family: var(--f-brand);
+    font-size: clamp(30px, 4.2vw, 50px);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    color: var(--c-chalk);
+    white-space: nowrap;
+    filter: url(#chalk);
+    transition: color 0.4s var(--e-out, ease);
+}
+
+.path__phone:hover {
+    color: var(--c-chalk-sun);
+}
+
+.path__facts {
+    display: grid;
+    gap: 12px;
+    font-size: 16px;
+    color: var(--c-chalk-soft);
+}
+
+.path__facts li {
     display: flex;
     align-items: center;
-    justify-content: center;
+    gap: 12px;
 }
 
-.contact__info-icon svg {
-    width: 22px;
-    height: 22px;
+.path__facts svg,
+.btn__icon {
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
     fill: none;
     stroke: currentColor;
     stroke-width: 1.8;
@@ -1448,36 +1614,172 @@ ul {
     stroke-linejoin: round;
 }
 
-.contact__info-label {
-    font-size: 12px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--c-text-muted);
+.path__facts svg {
+    color: var(--c-chalk-sun);
+}
+
+.path__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-top: 36px;
+}
+
+.btn__icon {
+    width: 18px;
+    height: 18px;
+    margin-right: 10px;
+}
+
+/* на тёмной доске — светлый шалфей, как в главном экране */
+.path .btn--primary {
+    background: var(--c-sage-dark);
+    border-color: var(--c-sage-dark);
+}
+
+.path .btn--primary:hover {
+    background: var(--c-sage);
+    border-color: var(--c-sage);
+}
+
+/* Карта — ещё один снимок, приклеенный к доске скотчем */
+.path__map {
+    position: relative;
+    margin: 0;
+    padding: 10px 10px 0;
+    background: #fbf8f1;
+    border-radius: 3px;
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.4), 0 3px 8px rgba(0, 0, 0, 0.25);
+    transform: rotate(2deg);
+}
+
+.path__map.animate-on-scroll.visible {
+    transform: rotate(2deg);
+}
+
+.path__map::before {
+    content: '';
+    position: absolute;
+    z-index: 1;
+    top: -12px;
+    left: 50%;
+    width: 34%;
+    height: 24px;
+    background: rgba(232, 168, 124, 0.82);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+    transform: translateX(-50%) rotate(-3deg);
+    clip-path: polygon(3% 0, 97% 4%, 100% 50%, 96% 100%, 2% 96%, 0 50%);
+}
+
+.path__map iframe {
     display: block;
-    margin-bottom: 2px;
+    width: 100%;
+    height: 320px;
+    border: 0;
+    border-radius: 2px;
 }
 
-.contact__info-value {
-    font-size: 16px;
-    font-weight: 500;
-    color: var(--c-forest);
-    display: block;
+.path__map figcaption {
+    padding: 6px 0 10px;
+    font-family: var(--f-hand);
+    font-size: 24px;
+    line-height: 1.1;
+    text-align: center;
+    color: var(--c-board);
 }
 
-.contact__info-value:hover {
-    color: var(--c-sage-dark);
+/* Узкий экран: дорога идёт сверху вниз вдоль номеров */
+@media (max-width: 860px) {
+    .path__track,
+    .path__goal {
+        display: none;
+    }
+
+    .path__stops {
+        grid-template-columns: 1fr;
+        gap: 36px;
+        max-width: 520px;
+        margin: 0 auto;
+    }
+
+    /* отрезок дороги от центра кружка до следующего шага */
+    .path__stop:not(:last-child)::before {
+        content: '';
+        position: absolute;
+        top: 36px;
+        bottom: -72px;
+        left: 34px;
+        border-left: 3px dotted var(--c-chalk-soft);
+        filter: url(#chalk);
+    }
+
+    .path__stop {
+        position: relative;
+        display: grid;
+        grid-template-columns: 72px 1fr;
+        column-gap: 22px;
+        align-items: start;
+        padding: 0;
+        text-align: left;
+    }
+
+    .path__num {
+        grid-row: span 2;
+        margin-top: 0;
+    }
+
+    .path__title {
+        margin: 6px 0;
+    }
+
+    .path__finish {
+        grid-template-columns: 1fr;
+        gap: 56px;
+        margin-top: 72px;
+        padding-top: 56px;
+        text-align: center;
+    }
+
+    .path__facts li,
+    .path__actions {
+        justify-content: center;
+    }
+
+    .path__map {
+        width: min(100%, 520px);
+        margin: 0 auto;
+    }
 }
 
-.contact__map {
-    border-radius: var(--r-card);
-    overflow: hidden;
-    box-shadow: var(--shadow-sm);
-    border: 1px solid var(--c-border);
-}
+@media (max-width: 480px) {
+    .path__stop {
+        grid-template-columns: 60px 1fr;
+        column-gap: 18px;
+    }
 
-.contact__map iframe {
-    display: block;
+    .path__num {
+        width: 60px;
+        height: 60px;
+        font-size: 36px;
+    }
+
+    .path__stop:not(:last-child)::before {
+        top: 30px;
+        bottom: -66px;
+        left: 28px;
+    }
+
+    .path__phone {
+        font-size: 28px;
+    }
+
+    .path__actions .btn {
+        flex: 1 1 100%;
+    }
+
+    .path__map iframe {
+        height: 260px;
+    }
 }
 
 /* ═══════════════════════════════
@@ -1655,11 +1957,6 @@ ul {
     .specialists__grid,
     .reviews__grid {
         grid-template-columns: repeat(2, 1fr);
-    }
-
-    .contact__grid {
-        grid-template-columns: 1fr;
-        gap: 40px;
     }
 
     .footer__inner {
@@ -1891,10 +2188,6 @@ ul {
     .btn {
         padding: 14px 28px;
         font-size: 14px;
-    }
-
-    .contact-form {
-        padding: 28px 20px;
     }
 
     .service-card,
@@ -2541,12 +2834,6 @@ ul {
 
 .faq-item__icon {
     transition: transform 0.45s var(--e-out);
-}
-
-/* ── Форма ── */
-.contact-form__field input,
-.contact-form__field textarea {
-    transition: border-color 0.4s var(--e-out), box-shadow 0.4s var(--e-out);
 }
 
 /* ═══════════════════════════════

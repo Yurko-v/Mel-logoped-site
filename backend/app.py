@@ -1,18 +1,12 @@
-"""Бэкенд сайта «Мел»: раздаёт склеенный в один файл сайт и принимает заявки с формы."""
-import json
-import logging
+"""Бэкенд сайта «Мел»: раздаёт склеенный в один файл сайт."""
 import os
 import re
 from pathlib import Path
 
-import requests
 from dotenv import load_dotenv
-from fastapi import FastAPI, HTTPException, Request
-from fastapi.exceptions import RequestValidationError
-from fastapi.middleware.cors import CORSMiddleware
+from fastapi import FastAPI, Request
 from fastapi.responses import FileResponse, HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
-from pydantic import BaseModel, field_validator
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
 BACKEND_DIR = Path(__file__).resolve().parent
@@ -20,21 +14,7 @@ SITE_DIR = BACKEND_DIR.parent
 
 load_dotenv(BACKEND_DIR / ".env")
 
-BOT_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN", "")
-CHAT_ID = os.environ.get("TELEGRAM_CHAT_ID", "")
-ALLOWED_ORIGIN = os.environ.get("ALLOWED_ORIGIN", "*")
-
-PHONE_RE = re.compile(r"\+?\d[\d\s\-()]{9,}\d")
-
-logger = logging.getLogger("mel-backend")
-app = FastAPI(title="Мел — сайт и API заявок")
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=[ALLOWED_ORIGIN],
-    allow_methods=["POST", "GET"],
-    allow_headers=["*"],
-)
+app = FastAPI(title="Мел — сайт")
 
 
 def build_page_html(page_name: str) -> str:
@@ -55,9 +35,6 @@ def build_page_html(page_name: str) -> str:
         lambda _match: f"<style>\n{css}\n</style>",
         html,
     )
-    # Бэкенд и фронтенд теперь на одном origin — конфиг указывает на относительный путь.
-    inline_config = f"<script>const TELEGRAM_CONFIG = {json.dumps({'API_URL': '/api/contact'})};</script>"
-    html = html.replace('<script src="config.js"></script>', inline_config)
     html = re.sub(
         r'<script src="script\.js(?:\?[^"]*)?"></script>',
         lambda _match: f"<script>\n{script_js}\n</script>",
@@ -91,39 +68,6 @@ def index():
     return INDEX_HTML
 
 
-class ContactRequest(BaseModel):
-    name: str
-    phone: str
-    age: str = ""
-    message: str = ""
-
-    @field_validator("name", "phone", "age", "message")
-    @classmethod
-    def strip(cls, value: str) -> str:
-        return value.strip()
-
-    @field_validator("name", "phone")
-    @classmethod
-    def not_empty(cls, value: str) -> str:
-        if not value:
-            raise ValueError("Заполните имя и телефон")
-        return value
-
-    @field_validator("phone")
-    @classmethod
-    def valid_phone(cls, value: str) -> str:
-        if not PHONE_RE.search(value):
-            raise ValueError("Некорректный номер телефона")
-        return value
-
-
-@app.exception_handler(RequestValidationError)
-def validation_error_handler(request: Request, exc: RequestValidationError):
-    first_error = exc.errors()[0]
-    message = first_error.get("msg", "Некорректные данные").removeprefix("Value error, ")
-    return JSONResponse(status_code=400, content={"ok": False, "error": message})
-
-
 # Обработчик вешаем на starlette-версию HTTPException: fastapi.HTTPException — её наследник,
 # а несуществующий маршрут роутер отдаёт именно как starlette-исключение.
 @app.exception_handler(StarletteHTTPException)
@@ -136,34 +80,6 @@ def http_exception_handler(request: Request, exc: StarletteHTTPException):
 
 @app.get("/api/health")
 def health():
-    return {"ok": True, "telegram_configured": bool(BOT_TOKEN and CHAT_ID)}
-
-
-@app.post("/api/contact")
-def contact(payload: ContactRequest):
-    if not BOT_TOKEN or not CHAT_ID:
-        logger.warning("Telegram не настроен, заявка потеряна: %r", payload)
-        raise HTTPException(status_code=503, detail="Форма временно не работает, позвоните нам")
-
-    text = (
-        "📩 Новая заявка с сайта «Мел»\n\n"
-        f"Имя: {payload.name}\n"
-        f"Телефон: {payload.phone}\n"
-        f"Возраст ребёнка: {payload.age or '—'}\n"
-        f"Сообщение: {payload.message or '—'}"
-    )
-
-    try:
-        resp = requests.post(
-            f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage",
-            json={"chat_id": CHAT_ID, "text": text},
-            timeout=10,
-        )
-        resp.raise_for_status()
-    except requests.RequestException:
-        logger.exception("Не удалось отправить сообщение в Telegram")
-        raise HTTPException(status_code=502, detail="Ошибка отправки, попробуйте позже")
-
     return {"ok": True}
 
 

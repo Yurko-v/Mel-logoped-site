@@ -118,89 +118,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // ── Form Validation & Submit via Python-бэкенд ──
-    const form = document.getElementById('contact-form');
-
-    // URL бэкенда загружается из config.js
-    const hasApiConfig = typeof TELEGRAM_CONFIG !== 'undefined' && TELEGRAM_CONFIG.API_URL;
-    const API_URL = hasApiConfig ? TELEGRAM_CONFIG.API_URL : '';
-
-    if (form) {
-        form.addEventListener('submit', async (e) => {
-            e.preventDefault();
-
-            const nameField = form.querySelector('#name');
-            const phoneField = form.querySelector('#phone');
-            const ageField = form.querySelector('#child-age');
-            const messageField = form.querySelector('#message');
-            const btn = form.querySelector('button[type="submit"]');
-            let isValid = true;
-
-            // Validation
-            [nameField, phoneField].forEach(field => {
-                if (!field.value.trim()) {
-                    field.style.borderColor = '#e05252';
-                    isValid = false;
-                } else {
-                    field.style.borderColor = '';
-                }
-            });
-
-            if (!isValid) return;
-
-            if (!API_URL) {
-                alert('Форма временно не работает. Позвоните нам!');
-                return;
-            }
-
-            // Show loading state
-            const btnLabel = btn.querySelector('span') || btn;
-            const originalText = btnLabel.textContent;
-            btnLabel.textContent = 'Отправка...';
-            btn.disabled = true;
-
-            try {
-                const response = await fetch(API_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        name: nameField.value.trim(),
-                        phone: phoneField.value.trim(),
-                        age: ageField.value.trim(),
-                        message: messageField.value.trim()
-                    })
-                });
-
-                const result = await response.json().catch(() => ({}));
-                if (!response.ok || !result.ok) {
-                    throw new Error(result.error || 'Ошибка отправки');
-                }
-
-                // Success
-                btnLabel.textContent = '✓ Заявка отправлена!';
-                btn.style.background = '#7BA887';
-                form.reset();
-
-                setTimeout(() => {
-                    btnLabel.textContent = originalText;
-                    btn.style.background = '';
-                    btn.disabled = false;
-                }, 3000);
-
-            } catch (error) {
-                // Error
-                btnLabel.textContent = '✗ Ошибка, попробуйте позже';
-                btn.style.background = '#e05252';
-
-                setTimeout(() => {
-                    btnLabel.textContent = originalText;
-                    btn.style.background = '';
-                    btn.disabled = false;
-                }, 3000);
-            }
-        });
-    }
-
     // ── Gallery ──
     const gallerySection = document.getElementById('gallery');
 
@@ -295,28 +212,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 showPhoto(dx < 0 ? currentIndex + 1 : currentIndex - 1);
             }
         }, { passive: true });
-    }
-
-    // ── Phone input formatting ──
-    const phoneInput = document.getElementById('phone');
-    if (phoneInput) {
-        phoneInput.addEventListener('input', (e) => {
-            let value = e.target.value.replace(/\D/g, '');
-
-            if (value.length > 0) {
-                if (value[0] === '7' || value[0] === '8') {
-                    value = value.substring(1);
-                }
-
-                let formatted = '+7';
-                if (value.length > 0) formatted += ' (' + value.substring(0, 3);
-                if (value.length >= 3) formatted += ') ' + value.substring(3, 6);
-                if (value.length >= 6) formatted += '-' + value.substring(6, 8);
-                if (value.length >= 8) formatted += '-' + value.substring(8, 10);
-
-                e.target.value = formatted;
-            }
-        });
     }
 
 });

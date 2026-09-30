@@ -14,7 +14,7 @@
         href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&family=Unbounded:wght@400;500;600;700&display=swap"
         rel="stylesheet" />
 
-    <link rel="stylesheet" href="style.css?v=32" />
+    <link rel="stylesheet" href="style.css?v=33" />
 </head>
 
 <body>
@@ -733,8 +733,7 @@
                         </button>
                         <div class="faq-item__answer">
                             <p>Вы можете позвонить нам по телефону <a href="tel:+79502702967">8 950 270 29 67</a>,
-                                написать в MAX или заполнить форму на сайте. Мы свяжемся с вами в течение рабочего
-                                дня.</p>
+                                или написать нам в MAX — вместе подберём специалиста и удобное время.</p>
                         </div>
                     </div>
 
@@ -780,83 +779,100 @@
             </div>
         </section>
 
-        <!-- ═══════════════ CONTACT ═══════════════ -->
-        <section class="section section--white" id="contact">
+        <!-- ═══════════════ ДОРОГА К ПЕРВОЙ ВСТРЕЧЕ — МЕЛОВАЯ ДОСКА ═══════════════ -->
+        <section class="path" id="contact">
             <div class="container">
-                <div class="section__header animate-on-scroll">
-                    <span class="section__label">Контакты</span>
-                    <h2 class="section__title">Запишитесь на консультацию</h2>
-                    <p class="section__desc">Оставьте заявку, и мы свяжемся с вами в ближайшее время для подбора
-                        удобного времени.</p>
+                <div class="section__header path__header animate-on-scroll">
+                    <span class="section__label">Первый шаг</span>
+                    <h2 class="section__title">С чего начинается дорога</h2>
+                    <p class="section__desc">Рассказываем, как всё устроено — от первого звонка до индивидуального
+                        маршрута, — чтобы вам было спокойно ещё до встречи.</p>
                 </div>
 
-                <div class="contact__grid">
-                    <form class="contact-form animate-on-scroll" id="contact-form">
-                        <div class="contact-form__field">
-                            <label for="name">Ваше имя</label>
-                            <input type="text" id="name" name="name" placeholder="Как вас зовут?" required />
-                        </div>
-                        <div class="contact-form__field">
-                            <label for="phone">Телефон</label>
-                            <input type="tel" id="phone" name="phone" placeholder="+7 (___) ___-__-__" required />
-                        </div>
-                        <div class="contact-form__field">
-                            <label for="child-age">Возраст ребёнка</label>
-                            <input type="text" id="child-age" name="child-age" placeholder="Например, 4 года" />
-                        </div>
-                        <div class="contact-form__field">
-                            <label for="message">Сообщение</label>
-                            <textarea id="message" name="message" rows="4"
-                                placeholder="Расскажите, чем мы можем помочь..."></textarea>
-                        </div>
-                        <button type="submit" class="btn btn--primary btn--full">Отправить заявку</button>
-                        <p class="contact-form__note">Нажимая кнопку, вы соглашаетесь на обработку персональных данных
-                        </p>
-                    </form>
+                <div class="path__road animate-on-scroll">
+                    <svg class="path__track" viewBox="0 0 1000 120" preserveAspectRatio="none" aria-hidden="true">
+                        <path d="M0 64 C 60 70, 90 60, 125 60 S 230 14, 250 16 S 330 60, 375 60 S 470 106, 500 104 S 590 60, 625 60 S 720 14, 750 16 S 830 60, 875 60 S 960 50, 1000 40" />
+                    </svg>
+                    <span class="path__goal" aria-hidden="true">
+                        <svg viewBox="0 0 40 40">
+                            <path d="M20 2 l5 11 12 1.5 -9 8.2 2.6 12 -10.6 -6 -10.6 6 2.6 -12 -9 -8.2 12 -1.5 z" />
+                        </svg>
+                        будущее
+                    </span>
 
-                    <div class="contact__info animate-on-scroll">
-                        <div class="contact__info-card">
-                            <div class="contact__info-item">
-                                <div class="contact__info-icon"><svg aria-hidden="true">
-                                        <use href="#i-phone" />
-                                    </svg></div>
-                                <div>
-                                    <span class="contact__info-label">Телефон</span>
-                                    <a href="tel:+79502702967" class="contact__info-value">8 950 270 29 67</a>
-                                </div>
-                            </div>
+                    <ol class="path__stops">
+                        <li class="path__stop">
+                            <span class="path__num" aria-hidden="true">1</span>
+                            <h3 class="path__title">Звонок</h3>
+                            <p class="path__text">Позвоните или напишите в MAX. Расскажите, что беспокоит, — подберём
+                                специалиста и удобное время.</p>
+                        </li>
+                        <li class="path__stop">
+                            <span class="path__num" aria-hidden="true">2</span>
+                            <h3 class="path__title">Знакомство</h3>
+                            <p class="path__text">Специалист наблюдает за ребёнком в игре и подробно беседует с вами.
+                                Возьмите заключения других специалистов, если они есть.</p>
+                        </li>
+                        <li class="path__stop">
+                            <span class="path__num" aria-hidden="true">3</span>
+                            <h3 class="path__title">Диагностика</h3>
+                            <p class="path__text">Оцениваем речь, внимание, память и мышление — и находим сильные
+                                стороны, на которые будем опираться.</p>
+                        </li>
+                        <li class="path__stop">
+                            <span class="path__num" aria-hidden="true">4</span>
+                            <h3 class="path__title">Свой маршрут</h3>
+                            <p class="path__text">Составляем индивидуальную программу и вместе с семьёй отслеживаем,
+                                как ребёнок продвигается.</p>
+                        </li>
+                    </ol>
+                </div>
 
-                            <div class="contact__info-item">
-                                <div class="contact__info-icon"><svg aria-hidden="true">
-                                        <use href="#i-pin" />
-                                    </svg></div>
-                                <div>
-                                    <span class="contact__info-label">Адрес</span>
-                                    <span class="contact__info-value">ул. Юрия Двужильного, 10</span>
-                                </div>
-                            </div>
-
-                            <div class="contact__info-item">
-                                <div class="contact__info-icon"><svg aria-hidden="true">
-                                        <use href="#i-clock" />
-                                    </svg></div>
-                                <div>
-                                    <span class="contact__info-label">Время работы</span>
-                                    <span class="contact__info-value">Пн–Сб: 9:00 – 19:00</span>
-                                </div>
-                            </div>
-
-
-
-                            <div class="contact__map">
-                                <iframe
-                                    src="https://yandex.ru/map-widget/v1/?text=Кемерово%2C%20улица%20Юрия%20Двужильного%2C%2010&z=16"
-                                    width="100%" height="250" style="border:0; border-radius: 20px;" allowfullscreen=""
-                                    loading="lazy" title="Карта — расположение центра Мел"></iframe>
-                            </div>
+                <div class="path__finish">
+                    <div class="path__call animate-on-scroll">
+                        <p class="path__call-lead">Первый шаг — просто позвонить</p>
+                        <a href="tel:+79502702967" class="path__phone">8 950 270 29 67</a>
+                        <ul class="path__facts">
+                            <li>
+                                <svg aria-hidden="true">
+                                    <use href="#i-pin" />
+                                </svg>
+                                Кемерово, ул. Юрия Двужильного, 10
+                            </li>
+                            <li>
+                                <svg aria-hidden="true">
+                                    <use href="#i-clock" />
+                                </svg>
+                                Пн–Сб: 9:00 – 19:00
+                            </li>
+                        </ul>
+                        <div class="path__actions">
+                            <a href="tel:+79502702967" class="btn btn--primary">
+                                <svg class="btn__icon" aria-hidden="true">
+                                    <use href="#i-phone" />
+                                </svg>
+                                Позвонить
+                            </a>
+                            <a href="https://yandex.ru/maps/?text=%D0%9A%D0%B5%D0%BC%D0%B5%D1%80%D0%BE%D0%B2%D0%BE%2C%20%D1%83%D0%BB%D0%B8%D1%86%D0%B0%20%D0%AE%D1%80%D0%B8%D1%8F%20%D0%94%D0%B2%D1%83%D0%B6%D0%B8%D0%BB%D1%8C%D0%BD%D0%BE%D0%B3%D0%BE%2C%2010"
+                                class="btn btn--chalk-outline" target="_blank" rel="noopener">Как добраться</a>
                         </div>
                     </div>
+
+                    <figure class="path__map animate-on-scroll">
+                        <iframe
+                            src="https://yandex.ru/map-widget/v1/?text=Кемерово%2C%20улица%20Юрия%20Двужильного%2C%2010&z=16"
+                            width="100%" height="100%" allowfullscreen="" loading="lazy"
+                            title="Карта — расположение центра Мел"></iframe>
+                        <figcaption>ждём вас здесь</figcaption>
+                    </figure>
                 </div>
+            </div>
+            <div class="hero__tray" aria-hidden="true">
+                <span class="hero__chalk hero__chalk--a"></span>
+                <span class="hero__chalk hero__chalk--b"></span>
+                <span class="hero__chalk hero__chalk--c"></span>
+                <span class="hero__eraser"></span>
+            </div>
         </section>
     </main>
 
@@ -891,8 +907,7 @@
         </div>
     </footer>
 
-    <script src="config.js"></script>
-    <script src="script.js?v=7"></script>
+    <script src="script.js?v=8"></script>
 </body>
 
 </html>

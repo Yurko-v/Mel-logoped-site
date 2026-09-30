@@ -21,9 +21,9 @@
 
 ## О проекте
 
-Сайт-визитка центра «Мел», который помогает детям с речевыми нарушениями и особенностями развития (РАС, ЗПР, ЗРР, СДВГ). Главная задача страницы — рассказать о центре и привести родителей к записи на консультацию: заявка с формы сразу приходит в Telegram.
+Сайт-визитка центра «Мел», который помогает детям с речевыми нарушениями и особенностями развития (РАС, ЗПР, ЗРР, СДВГ). Главная задача страницы — рассказать о центре и привести родителей к записи на консультацию по телефону.
 
-Визуальная идея — **меловая доска**: главный экран нарисован мелом, по нему идёт пунктирная «дорога в будущее», вдоль неё к доске прикреплены фотографии с занятий. Та же доска встречает на странице 404 — там на ней можно порисовать.
+Визуальная идея — **меловая доска**: главный экран нарисован мелом, по нему идёт пунктирная «дорога в будущее», вдоль неё к доске прикреплены фотографии с занятий. Той же доской страница и заканчивается: дорога проходит через четыре шага к первой встрече и приводит к телефону и карте. А на странице 404 на доске можно порисовать.
 
 ### Разделы страницы
 
@@ -36,21 +36,20 @@
 | Отзывы | Реальные отзывы родителей из 2ГИС |
 | Галерея | Мозаика из 17 фото с полноэкранным просмотром |
 | FAQ | Частые вопросы (аккордеон) |
-| Контакты | Форма записи, телефон, адрес, карта |
+| Первый шаг | Меловая «дорога» из 4 шагов: звонок → знакомство → диагностика → свой маршрут; телефон, адрес, карта |
 
 ### Что умеет
 
 - Адаптивная вёрстка: телефон, планшет, десктоп
 - Галерея-мозаика без пустот, просмотр фото стрелками, клавиатурой и свайпом
 - Анимации появления при прокрутке, учитывается системная настройка «меньше движения»
-- Отправка заявок в Telegram, маска телефона `+7`, валидация на сервере
 - Меловая страница 404 с рисованием
 
 ---
 
 ## Быстрый старт
 
-Сайт и бэкенд — одно FastAPI-приложение. При старте сервер склеивает `index.html` + `style.css` + `script.js` в один HTML, раздаёт его, отдаёт фото из `img/` и принимает заявки на `/api/contact`.
+Сайт и бэкенд — одно FastAPI-приложение. При старте сервер склеивает `index.html` + `style.css` + `script.js` в один HTML, раздаёт его и отдаёт фото из `img/`.
 
 ```bash
 cd backend
@@ -58,11 +57,10 @@ python -m venv venv
 venv\Scripts\activate          # Windows
 # source venv/bin/activate     # macOS / Linux
 pip install -r requirements.txt
-copy .env.example .env         # macOS / Linux: cp .env.example .env
 python app.py
 ```
 
-Сайт откроется на **http://localhost:5000/**, документация API — на `/docs`.
+Сайт откроется на **http://localhost:5000/**.
 
 > Сборка страницы происходит один раз при запуске, поэтому после правок в `index.html`, `style.css` или `script.js` сервер нужно перезапустить.
 
@@ -89,22 +87,6 @@ python app.py
 
 ---
 
-## Заявки в Telegram
-
-Сервер проверяет данные формы и пересылает их через Telegram Bot API. Настройки лежат в `backend/.env` (шаблон — `backend/.env.example`):
-
-| Переменная | Откуда взять |
-|---|---|
-| `TELEGRAM_BOT_TOKEN` | Создать бота у [@BotFather](https://t.me/BotFather) |
-| `TELEGRAM_CHAT_ID` | Через [@userinfobot](https://t.me/userinfobot) или метод `getUpdates` |
-| `ALLOWED_ORIGIN` | Нужен, только если сайт и API на разных доменах; иначе `*` |
-
-Проверить, что бот настроен: `GET /api/health` → `telegram_configured: true`.
-
-> ⚠️ `backend/.env` в `.gitignore` и в репозиторий не попадает.
-
----
-
 ## Деплой
 
 Продакшен — **[meldoroga.ru](https://meldoroga.ru)** на shared-хостинге Beget под Phusion Passenger.
@@ -126,7 +108,6 @@ touch ~/meldoroga.ru/public_html/tmp/restart.txt
 │   ├── .htaccess             # PassengerEnabled On + путь до venv/bin/python3
 │   └── passenger_wsgi.py     # добавляет ../mel-site/backend в sys.path, оборачивает FastAPI через a2wsgi
 ├── mel-site/                 # git-клон репозитория
-│   └── backend/.env          # секреты Telegram
 └── venv/                     # зависимости
 ```
 
@@ -146,15 +127,14 @@ venv/bin/pip install -r ~/meldoroga.ru/mel-site/backend/requirements.txt
 ├── index.html              # Главная страница
 ├── 404.html                # Страница «не найдено» (меловая доска)
 ├── style.css               # Стили
-├── script.js               # Меню, анимации, FAQ, галерея, форма
-├── config.js               # URL API, если открывать index.html без сервера
+├── script.js               # Меню, анимации, FAQ, галерея
 ├── logo.svg, logo_footer.svg, favicon.ico
 ├── img/                    # Фотографии (см. «Фотографии»)
 ├── backend/
-│   ├── app.py              # FastAPI: сборка страницы, статика, /api/contact
+│   ├── app.py              # FastAPI: сборка страницы, статика, 404
 │   ├── passenger_wsgi.py   # Точка входа для Passenger
 │   ├── requirements.txt
-│   └── .env.example        # Шаблон секретов
+│   └── .env.example        # Шаблон настроек (порт)
 └── .github/workflows/
     └── deploy-beget.yml    # Автодеплой на Beget
 ```
@@ -164,9 +144,8 @@ venv/bin/pip install -r ~/meldoroga.ru/mel-site/backend/requirements.txt
 ## Технологии
 
 - **HTML5, CSS3** — CSS-переменные, Grid, Flexbox, медиа-запросы, анимации
-- **JavaScript** — ванильный, IntersectionObserver, Fetch API
-- **Python, FastAPI** — раздача сайта и приём заявок; `a2wsgi` для Passenger
-- **Telegram Bot API** — доставка заявок
+- **JavaScript** — ванильный, IntersectionObserver
+- **Python, FastAPI** — раздача сайта; `a2wsgi` для Passenger
 - **Шрифты** — [Unbounded](https://fonts.google.com/specimen/Unbounded), [Cormorant Garamond](https://fonts.google.com/specimen/Cormorant+Garamond), [Inter](https://fonts.google.com/specimen/Inter), [Caveat](https://fonts.google.com/specimen/Caveat)
 
 ---
