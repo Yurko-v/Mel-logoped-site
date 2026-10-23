@@ -4,6 +4,60 @@
 
 document.addEventListener('DOMContentLoaded', () => {
 
+    const isEn = document.documentElement.lang === 'en';
+    const t = isEn ? {
+        toDark: 'Switch to dark theme',
+        toLight: 'Switch to light theme',
+        photo: 'Photo viewer',
+        close: 'Close',
+        prev: 'Previous photo',
+        next: 'Next photo',
+    } : {
+        toDark: 'Включить тёмную тему',
+        toLight: 'Включить светлую тему',
+        photo: 'Просмотр фотографии',
+        close: 'Закрыть',
+        prev: 'Предыдущее фото',
+        next: 'Следующее фото',
+    };
+
+    // ── Тема ──
+    // Начальную тему ставит маленький скрипт в <head> (чтобы не было вспышки).
+    // Здесь — только кнопка и запоминание выбора.
+    const root = document.documentElement;
+    const themeBtn = document.getElementById('theme-toggle');
+
+    const syncThemeBtn = () => {
+        if (!themeBtn) return;
+        const dark = root.dataset.theme === 'dark';
+        themeBtn.setAttribute('aria-pressed', String(dark));
+        themeBtn.setAttribute('aria-label', dark ? t.toLight : t.toDark);
+        themeBtn.title = dark ? t.toLight : t.toDark;
+    };
+
+    const setTheme = (theme, remember) => {
+        root.dataset.theme = theme;
+        if (remember) {
+            try { localStorage.setItem('theme', theme); } catch (e) { /* приватный режим */ }
+        }
+        syncThemeBtn();
+    };
+
+    if (themeBtn) {
+        themeBtn.addEventListener('click', () => {
+            setTheme(root.dataset.theme === 'dark' ? 'light' : 'dark', true);
+        });
+    }
+    syncThemeBtn();
+
+    // Пока человек сам не выбрал тему — следуем за системной
+    const systemDark = window.matchMedia('(prefers-color-scheme: dark)');
+    systemDark.addEventListener('change', (e) => {
+        let saved = null;
+        try { saved = localStorage.getItem('theme'); } catch (err) { /* нет доступа */ }
+        if (!saved) setTheme(e.matches ? 'dark' : 'light', false);
+    });
+
     // ── Sticky Header ──
     const header = document.getElementById('header');
     const onScroll = () => {
@@ -16,32 +70,35 @@ document.addEventListener('DOMContentLoaded', () => {
     const burger = document.getElementById('burger');
     const nav = document.getElementById('nav');
 
-    // Create overlay
-    const overlay = document.createElement('div');
-    overlay.className = 'nav-overlay';
-    document.body.appendChild(overlay);
+    // На странице политики меню нет
+    if (burger && nav) {
+        // Create overlay
+        const overlay = document.createElement('div');
+        overlay.className = 'nav-overlay';
+        document.body.appendChild(overlay);
 
-    const toggleMenu = () => {
-        const isOpen = nav.classList.toggle('open');
-        burger.classList.toggle('active', isOpen);
-        overlay.classList.toggle('active', isOpen);
-        document.body.style.overflow = isOpen ? 'hidden' : '';
-    };
+        const toggleMenu = () => {
+            const isOpen = nav.classList.toggle('open');
+            burger.classList.toggle('active', isOpen);
+            overlay.classList.toggle('active', isOpen);
+            document.body.style.overflow = isOpen ? 'hidden' : '';
+        };
 
-    const closeMenu = () => {
-        nav.classList.remove('open');
-        burger.classList.remove('active');
-        overlay.classList.remove('active');
-        document.body.style.overflow = '';
-    };
+        const closeMenu = () => {
+            nav.classList.remove('open');
+            burger.classList.remove('active');
+            overlay.classList.remove('active');
+            document.body.style.overflow = '';
+        };
 
-    burger.addEventListener('click', toggleMenu);
-    overlay.addEventListener('click', closeMenu);
+        burger.addEventListener('click', toggleMenu);
+        overlay.addEventListener('click', closeMenu);
 
-    // Close menu on nav link click
-    nav.querySelectorAll('.nav__link').forEach(link => {
-        link.addEventListener('click', closeMenu);
-    });
+        // Close menu on nav link click
+        nav.querySelectorAll('.nav__link').forEach(link => {
+            link.addEventListener('click', closeMenu);
+        });
+    }
 
     // ── Smooth Scroll ──
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
@@ -135,12 +192,12 @@ document.addEventListener('DOMContentLoaded', () => {
         lightbox.className = 'gallery__lightbox';
         lightbox.setAttribute('role', 'dialog');
         lightbox.setAttribute('aria-modal', 'true');
-        lightbox.setAttribute('aria-label', 'Просмотр фотографии');
+        lightbox.setAttribute('aria-label', t.photo);
         lightbox.innerHTML = `
-            <button class="gallery__lightbox-close" aria-label="Закрыть">&times;</button>
-            <button class="gallery__lightbox-prev" aria-label="Предыдущее фото">&#10094;</button>
+            <button class="gallery__lightbox-close" aria-label="${t.close}">&times;</button>
+            <button class="gallery__lightbox-prev" aria-label="${t.prev}">&#10094;</button>
             <img class="gallery__lightbox-image" src="" alt="">
-            <button class="gallery__lightbox-next" aria-label="Следующее фото">&#10095;</button>
+            <button class="gallery__lightbox-next" aria-label="${t.next}">&#10095;</button>
             <div class="gallery__lightbox-counter" aria-live="polite"></div>
         `;
         document.body.appendChild(lightbox);

@@ -47,6 +47,14 @@ def build_page_html(page_name: str) -> str:
 INDEX_HTML = build_page_html("index.html")
 NOT_FOUND_HTML = build_page_html("404.html")
 
+# Остальные страницы: адрес → файл. В них пути к картинкам абсолютные (/img/...),
+# поэтому они работают и на вложенных адресах вроде /en/privacy.
+PAGES = {
+    "/en": build_page_html("en.html"),
+    "/privacy": build_page_html("privacy.html"),
+    "/en/privacy": build_page_html("privacy-en.html"),
+}
+
 # Явные маршруты для картинок/иконок вместо монтирования всей папки проекта —
 # чтобы наружу не утекли backend/.env и прочие файлы репозитория.
 STATIC_ASSETS = {
@@ -61,11 +69,19 @@ for route_path, file_path in STATIC_ASSETS.items():
 # Фотографии (галерея, специалисты) — отдельная папка img/, в ней нет ничего секретного,
 # поэтому её можно смонтировать целиком. StaticFiles сам не выпускает за пределы папки.
 app.mount("/img", StaticFiles(directory=SITE_DIR / "img"), name="img")
+# Шрифты храним у себя, чтобы не передавать IP посетителей в Google.
+app.mount("/fonts", StaticFiles(directory=SITE_DIR / "fonts"), name="fonts")
 
 
 @app.get("/", response_class=HTMLResponse, include_in_schema=False)
 def index():
     return INDEX_HTML
+
+
+for route_path, page_html in PAGES.items():
+    app.get(route_path, response_class=HTMLResponse, include_in_schema=False)(
+        lambda html=page_html: HTMLResponse(html)
+    )
 
 
 # Обработчик вешаем на starlette-версию HTTPException: fastapi.HTTPException — её наследник,

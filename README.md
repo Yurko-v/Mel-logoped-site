@@ -44,6 +44,9 @@
 - Галерея-мозаика без пустот, просмотр фото стрелками, клавиатурой и свайпом
 - Анимации появления при прокрутке, учитывается системная настройка «меньше движения»
 - Меловая страница 404 с рисованием
+- Светлая и тёмная тема (переключатель в шапке, по умолчанию — как в системе)
+- Русская (`/`) и английская (`/en`) версии
+- Политика конфиденциальности: `/privacy` и `/en/privacy`
 
 ---
 
@@ -70,7 +73,9 @@ python app.py
 
 - **Страница** — чистые HTML/CSS/JS без фреймворков и сборщиков.
 - **Сервер** ([backend/app.py](backend/app.py)) встраивает CSS и JS прямо в HTML (ссылки с `?v=…` тоже распознаются), поэтому браузер получает страницу одним запросом.
-- **Статика** отдаётся точечно: иконка, логотипы и папка `img/`. Остальные файлы репозитория (в том числе `backend/.env`) снаружи недоступны.
+- **Статика** отдаётся точечно: иконка, логотипы, папки `img/` и `fonts/`. Остальные файлы репозитория (в том числе `backend/.env`) снаружи недоступны.
+- **Страницы**: `/` → `index.html`, `/en` → `en.html`, `/privacy` → `privacy.html`, `/en/privacy` → `privacy-en.html`. Тексты на двух языках живут в разных файлах: правя цену или текст в `index.html`, поправьте и `en.html`. В новых страницах пути к картинкам абсолютные (`/img/...`), чтобы работали вложенные адреса.
+- **Тёмная тема** — блок «ТЁМНАЯ ТЕМА» в конце `style.css`: переопределяет переменные цветов при `data-theme="dark"` на `<html>`. Атрибут ставит маленький скрипт в `<head>` каждой страницы (до отрисовки, чтобы не было вспышки), кнопку обслуживает `script.js`.
 - **404**: любой неизвестный адрес отдаёт [404.html](404.html), кроме `/api/*` — там ответ в JSON.
 
 ### Фотографии
@@ -125,11 +130,15 @@ venv/bin/pip install -r ~/meldoroga.ru/mel-site/backend/requirements.txt
 
 ```
 ├── index.html              # Главная страница
+├── en.html                 # Английская версия главной
+├── privacy.html            # Политика конфиденциальности
+├── privacy-en.html         # Она же на английском
 ├── 404.html                # Страница «не найдено» (меловая доска)
 ├── style.css               # Стили
 ├── script.js               # Меню, анимации, FAQ, галерея
 ├── logo.svg, logo_footer.svg, favicon.ico
 ├── img/                    # Фотографии (см. «Фотографии»)
+├── fonts/                  # Шрифты (woff2, кириллица и латиница)
 ├── backend/
 │   ├── app.py              # FastAPI: сборка страницы, статика, 404
 │   ├── passenger_wsgi.py   # Точка входа для Passenger
@@ -146,7 +155,7 @@ venv/bin/pip install -r ~/meldoroga.ru/mel-site/backend/requirements.txt
 - **HTML5, CSS3** — CSS-переменные, Grid, Flexbox, медиа-запросы, анимации
 - **JavaScript** — ванильный, IntersectionObserver
 - **Python, FastAPI** — раздача сайта; `a2wsgi` для Passenger
-- **Шрифты** — [Unbounded](https://fonts.google.com/specimen/Unbounded), [Cormorant Garamond](https://fonts.google.com/specimen/Cormorant+Garamond), [Inter](https://fonts.google.com/specimen/Inter), [Caveat](https://fonts.google.com/specimen/Caveat)
+- **Шрифты** — лежат в `fonts/` и подключаются из `style.css`, а не с Google: так IP посетителей не передаётся за границу (152-ФЗ). Лицензия SIL OFL. [Unbounded](https://fonts.google.com/specimen/Unbounded), [Cormorant Garamond](https://fonts.google.com/specimen/Cormorant+Garamond), [Inter](https://fonts.google.com/specimen/Inter), [Caveat](https://fonts.google.com/specimen/Caveat)
 
 ---
 
